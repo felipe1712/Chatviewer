@@ -1,5 +1,5 @@
 # Multi-stage Dockerfile para ChatViewer Pro License Server
-FROM rust:1.80-slim as builder
+FROM rust:latest as builder
 WORKDIR /usr/src/app
 
 RUN apt-get update && apt-get install -y pkg-config libssl-dev libsqlite3-dev && rm -rf /var/lib/apt/lists/*
