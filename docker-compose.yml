@@ -1,0 +1,11 @@
+services:
+  license-server:
+    build: .
+    container_name: chatviewer-server
+    restart: always
+    ports:
+      - "8095:8095"
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env

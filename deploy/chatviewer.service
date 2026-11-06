@@ -1,0 +1,15 @@
+[Unit]
+Description=ChatViewer Pro License Server and Public Site
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/chatviewer
+ExecStart=/var/www/chatviewer/target/release/license-server
+Restart=always
+RestartSec=5
+EnvironmentFile=/var/www/chatviewer/.env
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,26 @@
+[package]
+name = "license-server"
+version = "1.0.0"
+edition = "2021"
+authors = ["ChatViewer Pro Team <licensing@chatviewer.pro>"]
+description = "Servidor Comercial de Licencias, Landing Page, Portal de Autogestión, Stripe y Brevo Email para ChatViewer Pro"
+
+[dependencies]
+axum = { version = "0.7.9", features = ["macros", "multipart"] }
+tokio = { version = "1.43", features = ["full"] }
+tower = { version = "0.5", features = ["util"] }
+tower-http = { version = "0.5.2", features = ["cors", "trace", "fs"] }
+sqlx = { version = "0.8.0", features = ["runtime-tokio", "sqlite", "chrono", "uuid", "migrate"] }
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.138"
+chrono = { version = "0.4.39", features = ["serde"] }
+uuid = { version = "1.13.1", features = ["v4", "serde"] }
+base64 = "0.22.1"
+sha2 = "0.10.8"
+hmac = "0.12.1"
+hex = "0.4.3"
+subtle = "2.6.1"
+reqwest = { version = "0.12.12", default-features = false, features = ["json", "rustls-tls"] }
+zip = { version = "2.2.0", default-features = false, features = ["deflate"] }
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter", "fmt"] }

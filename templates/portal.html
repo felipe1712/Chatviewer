@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Autogestión de Licencias · ChatViewer Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --bs-body-bg: #0b0f19;
+            --bs-body-color: #cbd5e1;
+            --forensic-accent: #38bdf8;
+            --forensic-border: #1e293b;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .card-custom {
+            background-color: #111827;
+            border: 1px solid var(--forensic-border);
+            border-radius: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark border-bottom" style="background: rgba(11, 15, 25, 0.95); border-color: var(--forensic-border) !important;">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="/">
+                <i class="bi bi-shield-check text-info fs-4"></i>
+                <span>ChatViewer <span class="badge bg-info text-dark ms-1">PRO</span> · Portal</span>
+            </a>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-success" id="user-badge">Cliente Autenticado</span>
+                <a href="/" class="btn btn-outline-secondary btn-sm"><i class="bi bi-box-arrow-right"></i> Salir</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5" style="max-width: 960px;">
+        <!-- ENCABEZADO -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h3 class="fw-bold text-white mb-1">Tus Licencias Forenses</h3>
+                <p class="text-secondary small mb-0">Asigna la huella de hardware de tus estaciones de peritaje y descarga tu archivo criptográfico <code>license.lic</code>.</p>
+            </div>
+            <div>
+                <button class="btn btn-info btn-sm fw-bold text-dark" onclick="reloadLicenses()">
+                    <i class="bi bi-arrow-clockwise me-1"></i> Actualizar
+                </button>
+            </div>
+        </div>
+
+        <!-- LISTA DE LICENCIAS -->
+        <div id="licenses-container">
+            <div class="text-center py-5">
+                <div class="spinner-border text-info" role="status"></div>
+                <div class="text-muted small mt-2">Cargando tus licencias activas...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL VINCULAR ESTACIÓN -->
+    <div class="modal fade" id="modal-assign" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark border" style="border-color: var(--forensic-border) !important;">
+                <div class="modal-header border-bottom" style="border-color: var(--forensic-border) !important;">
+                    <h5 class="modal-title text-white fw-bold">
+                        <i class="bi bi-cpu-fill text-info me-2"></i> Vincular Estación Forense
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-secondary small mb-3">
+                        Abre <strong>ChatViewer Pro</strong> en tu estación de trabajo, pulsa en el botón de <strong>Licencia</strong> en la barra superior y copia la <strong>Huella de Máquina</strong>.
+                    </p>
+                    <input type="hidden" id="assign-license-id">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Huella de Máquina (Machine Fingerprint) *</label>
+                        <input type="text" class="form-control font-monospace small" id="assign-fingerprint" placeholder="Ej. A1B2C3D4E5F67890..." required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Identificador de Dongle USB (Opcional si usa llave física)</label>
+                        <input type="text" class="form-control font-monospace small" id="assign-dongle" placeholder="Ej. USB:VID_0781&PID_5583&SER_12345">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Etiqueta Descriptiva de la Máquina</label>
+                        <input type="text" class="form-control" id="assign-label" placeholder="Ej. Laptop Dell Forense Perito 1">
+                    </div>
+
+                    <div id="assign-alert" class="alert alert-danger py-2 small d-none"></div>
+
+                    <button class="btn btn-info w-100 py-2 fw-bold text-dark" id="btn-submit-assign" onclick="submitSeatAssignment()">
+                        Vincular y Generar Licencia Firmada
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerEmail = urlParams.get('email') || 'perito@laboratorio.com';
+        const sessionId = urlParams.get('session_id') || '';
+
+        async function reloadLicenses() {
+            const container = document.getElementById('licenses-container');
+            container.innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-info" role="status"></div>
+                    <div class="text-muted small mt-2">Cargando licencias...</div>
+                </div>
+            `;
+
+            try {
+                const res = await fetch(`/api/portal/licenses?email=${encodeURIComponent(customerEmail)}&session_id=${encodeURIComponent(sessionId)}`);
+                const data = await res.json();
+
+                if (!res.ok || !data.licenses || data.licenses.length === 0) {
+                    container.innerHTML = `
+                        <div class="card card-custom p-5 text-center">
+                            <i class="bi bi-shield-slash text-secondary fs-1 mb-3"></i>
+                            <h5 class="text-white fw-bold">No se encontraron licencias activas</h5>
+                            <p class="text-secondary small mb-3">Si acabas de realizar una compra, el pago puede demorar unos segundos en conciliarse.</p>
+                            <div><a href="/#pricing" class="btn btn-outline-info btn-sm">Ver Planes y Precios</a></div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = data.licenses.map(lic => {
+                    const assignedCount = (lic.seats_assigned || []).length;
+                    const maxSeats = lic.seats || 1;
+                    const tierName = (lic.tier || 'PERITAJE').toUpperCase();
+                    const canAdd = assignedCount < maxSeats;
+
+                    return `
+                        <div class="card card-custom p-4 mb-4">
+                            <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3 flex-wrap gap-2">
+                                <div>
+                                    <span class="badge ${tierName === 'LABORATORIO' ? 'bg-primary' : 'bg-info text-dark'} fw-bold me-2">
+                                        NIVEL ${tierName}
+                                    </span>
+                                    <span class="text-white fw-bold">ID: ${lic.id}</span>
+                                    <div class="text-secondary small mt-1">
+                                        Vigencia: <strong>${lic.expires_at ? new Date(lic.expires_at).toLocaleDateString() : 'Perpetua'}</strong>
+                                        (${lic.days_remaining !== null ? lic.days_remaining + ' días restantes' : 'Ilimitada'})
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-success btn-sm fw-bold" onclick="downloadLicFile('${lic.id}')">
+                                        <i class="bi bi-download me-1"></i> Descargar license.lic
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="small fw-bold text-muted">Estaciones Asignadas (${assignedCount} de ${maxSeats})</span>
+                                    ${canAdd ? `
+                                        <button class="btn btn-outline-info btn-sm" onclick="openAssignModal('${lic.id}')">
+                                            <i class="bi bi-plus-circle me-1"></i> Vincular Estación
+                                        </button>
+                                    ` : `
+                                        <span class="badge bg-secondary">Cupo de Asientos Completo</span>
+                                    `}
+                                </div>
+
+                                <div class="list-group list-group-flush border rounded overflow-hidden">
+                                    ${assignedCount === 0 ? `
+                                        <div class="list-group-item bg-dark text-muted small py-3 text-center">
+                                            No has vinculado ninguna huella de estación todavía. Haz clic en <strong>Vincular Estación</strong> para registrar tu primera PC.
+                                        </div>
+                                    ` : (lic.seats_assigned || []).map(seat => `
+                                        <div class="list-group-item bg-dark d-flex justify-content-between align-items-center py-2">
+                                            <div>
+                                                <i class="bi bi-laptop text-info me-2"></i>
+                                                <strong class="text-white">${seat.label || 'Estación Forense'}</strong>
+                                                <div class="font-monospace text-muted small" style="font-size: 0.75rem;">${seat.machine_fingerprint}</div>
+                                            </div>
+                                            <span class="badge bg-success text-dark">Activo</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                container.innerHTML = `
+                    <div class="alert alert-danger">Error conectando al servidor de licencias: ${err.message}</div>
+                `;
+            }
+        }
+
+        function openAssignModal(licenseId) {
+            document.getElementById('assign-license-id').value = licenseId;
+            document.getElementById('assign-fingerprint').value = '';
+            document.getElementById('assign-dongle').value = '';
+            document.getElementById('assign-label').value = '';
+            document.getElementById('assign-alert').classList.add('d-none');
+            const modal = new bootstrap.Modal(document.getElementById('modal-assign'));
+            modal.show();
+        }
+
+        async function submitSeatAssignment() {
+            const licenseId = document.getElementById('assign-license-id').value;
+            const fp = document.getElementById('assign-fingerprint').value.trim();
+            const dongle = document.getElementById('assign-dongle').value.trim();
+            const label = document.getElementById('assign-label').value.trim();
+            const alertBox = document.getElementById('assign-alert');
+            const btn = document.getElementById('btn-submit-assign');
+
+            alertBox.classList.add('d-none');
+            if (!fp) {
+                alertBox.textContent = 'Por favor introduzca la huella de máquina obtenida de ChatViewer Pro.';
+                alertBox.classList.remove('d-none');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Firmando licencia...';
+
+            try {
+                const res = await fetch(`/api/portal/license/${licenseId}/assign`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        machine_fingerprint: fp,
+                        dongle_id: dongle || null,
+                        label: label || null
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById('modal-assign')).hide();
+                    reloadLicenses();
+                    downloadLicFile(licenseId);
+                } else {
+                    alertBox.textContent = data.message || 'Error al vincular el puesto.';
+                    alertBox.classList.remove('d-none');
+                }
+            } catch (err) {
+                alertBox.textContent = `Error de conexión: ${err.message}`;
+                alertBox.classList.remove('d-none');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Vincular y Generar Licencia Firmada';
+            }
+        }
+
+        function downloadLicFile(licenseId) {
+            window.location.href = `/api/portal/license/${licenseId}/download`;
+        }
+
+        // Carga inicial
+        reloadLicenses();
+    </script>
+</body>
+</html>

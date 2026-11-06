@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración y Operaciones · Servidor de Licencias</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --bs-body-bg: #090d16;
+            --bs-body-color: #cbd5e1;
+            --forensic-accent: #38bdf8;
+            --forensic-border: #1e293b;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .card-custom {
+            background-color: #111827;
+            border: 1px solid var(--forensic-border);
+            border-radius: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark border-bottom" style="background: rgba(11, 15, 25, 0.95); border-color: var(--forensic-border) !important;">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
+                <i class="bi bi-shield-shaded text-danger fs-4"></i>
+                <span>ChatViewer <span class="badge bg-danger ms-1">ADMIN</span></span>
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-secondary" id="kpi-env">Producción / Air-Gapped Master</span>
+                <a href="/" class="btn btn-outline-light btn-sm"><i class="bi bi-box-arrow-up-right me-1"></i> Ver Landing</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4 my-4">
+        <!-- KPIS -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card card-custom p-3">
+                    <div class="text-secondary small fw-bold">TOTAL LICENCIAS EMITIDAS</div>
+                    <h2 class="text-white fw-bold mb-0" id="kpi-total-licenses">0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-custom p-3">
+                    <div class="text-secondary small fw-bold">PUESTOS FORENSES ACTIVOS</div>
+                    <h2 class="text-info fw-bold mb-0" id="kpi-total-seats">0</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-custom p-3">
+                    <div class="text-secondary small fw-bold">INGRESOS PROCESADOS (ESTIMADO)</div>
+                    <h2 class="text-success fw-bold mb-0" id="kpi-revenue">$0 USD</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-custom p-3">
+                    <div class="text-secondary small fw-bold">REVOCACIONES ACTIVAS (CRL)</div>
+                    <h2 class="text-danger fw-bold mb-0" id="kpi-revocations">0</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCIONES PRINCIPALES: GENERADOR POR LOTES Y GESTOR CRL -->
+        <div class="row g-4 mb-4">
+            <!-- GENERADOR POR LOTES -->
+            <div class="col-lg-6">
+                <div class="card card-custom p-4 h-100">
+                    <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-boxes text-info"></i> Generador de Licencias por Lotes (Batch)
+                    </h5>
+                    <p class="text-secondary small mb-3">
+                        Emisión masiva de licencias para convenios judiciales, fiscalías o distribuidores mayoristas.
+                    </p>
+
+                    <div class="row g-2 mb-2">
+                        <div class="col-6">
+                            <label class="form-label small text-muted">Nombre de la Entidad / Cliente *</label>
+                            <input type="text" class="form-control form-control-sm" id="batch-name" placeholder="Fiscalía General de Justicia">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small text-muted">Correo Electrónico de Contacto *</label>
+                            <input type="email" class="form-control form-control-sm" id="batch-email" placeholder="peritajes@fgj.gob">
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-4">
+                            <label class="form-label small text-muted">Tier / Nivel</label>
+                            <select class="form-select form-select-sm" id="batch-tier">
+                                <option value="peritaje">Peritaje (1 Puesto)</option>
+                                <option value="laboratorio">Laboratorio (5 Puestos)</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label small text-muted">Cantidad de Licencias</label>
+                            <input type="number" class="form-control form-control-sm" id="batch-qty" value="5" min="1" max="100">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label small text-muted">Vigencia (Días)</label>
+                            <input type="number" class="form-control form-control-sm" id="batch-days" value="365">
+                        </div>
+                    </div>
+
+                    <div id="batch-alert" class="alert alert-info py-2 small d-none"></div>
+
+                    <button class="btn btn-info btn-sm fw-bold text-dark w-100" onclick="submitBatchGenerate()">
+                        <i class="bi bi-file-earmark-zip me-1"></i> Generar y Descargar Paquete ZIP
+                    </button>
+                </div>
+            </div>
+
+            <!-- GESTOR DE REVOCACIONES Y LISTA NEGRA (CRL) -->
+            <div class="col-lg-6">
+                <div class="card card-custom p-4 h-100">
+                    <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-slash-circle-fill text-danger"></i> Gestor de Revocación y Lista Negra (CRL)
+                    </h5>
+                    <p class="text-secondary small mb-3">
+                        Revoca licencias por fraude, contracargos o sustitución de hardware no autorizada.
+                    </p>
+
+                    <div class="mb-2">
+                        <label class="form-label small text-muted">ID de Licencia a Revocar *</label>
+                        <input type="text" class="form-control form-control-sm" id="revoke-id" placeholder="Ej. LIC-PER-2026-ABC12345">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Motivo de Revocación *</label>
+                        <input type="text" class="form-control form-control-sm" id="revoke-reason" placeholder="Contracargo bancario / Reemplazo de estación">
+                    </div>
+
+                    <div id="revoke-alert" class="alert alert-danger py-2 small d-none"></div>
+
+                    <button class="btn btn-outline-danger btn-sm fw-bold w-100" onclick="submitRevocation()">
+                        <i class="bi bi-shield-x me-1"></i> Revocar y Agregar a Lista Negra Inmutable
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA DE LICENCIAS Y LOGS -->
+        <div class="card card-custom p-4">
+            <h5 class="text-white fw-bold mb-3">Registro de Licencias y Auditoría de Webhooks</h5>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-sm align-middle">
+                    <thead>
+                        <tr class="text-muted small">
+                            <th>ID Licencia</th>
+                            <th>Cliente / Empresa</th>
+                            <th>Tier</th>
+                            <th>Puestos Asignados</th>
+                            <th>Estado</th>
+                            <th>Emitida</th>
+                            <th>Vencimiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-licenses-body">
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">Cargando registros...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const adminToken = localStorage.getItem('chatviewer_admin_token') || 'forensic-admin-master-key-2026';
+
+        async function loadAdminData() {
+            try {
+                const res = await fetch('/api/admin/overview', {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    document.getElementById('kpi-total-licenses').textContent = data.total_licenses || 0;
+                    document.getElementById('kpi-total-seats').textContent = data.total_seats || 0;
+                    document.getElementById('kpi-revenue').textContent = `$${(data.revenue_cents || 0) / 100} USD`;
+                    document.getElementById('kpi-revocations').textContent = data.total_revocations || 0;
+
+                    const tbody = document.getElementById('table-licenses-body');
+                    if (!data.licenses || data.licenses.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-4 text-muted">No hay licencias registradas</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = data.licenses.map(l => `
+                        <tr>
+                            <td class="font-monospace text-info">${l.id}</td>
+                            <td>${l.customer_name} <br><span class="text-muted small">${l.customer_email}</span></td>
+                            <td><span class="badge ${l.tier === 'laboratorio' ? 'bg-primary' : 'bg-info text-dark'}">${l.tier.toUpperCase()}</span></td>
+                            <td>${l.seats_assigned} / ${l.seats}</td>
+                            <td>
+                                ${l.is_revoked ? '<span class="badge bg-danger">Revocada</span>' : '<span class="badge bg-success text-dark">Activa</span>'}
+                            </td>
+                            <td class="small text-muted">${new Date(l.issued_at).toLocaleDateString()}</td>
+                            <td class="small text-muted">${l.expires_at ? new Date(l.expires_at).toLocaleDateString() : 'Perpetua'}</td>
+                            <td>
+                                <a href="/api/portal/license/${l.id}/download" class="btn btn-outline-light btn-sm py-0 px-2">Descargar .lic</a>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function submitBatchGenerate() {
+            const name = document.getElementById('batch-name').value.trim();
+            const email = document.getElementById('batch-email').value.trim();
+            const tier = document.getElementById('batch-tier').value;
+            const qty = parseInt(document.getElementById('batch-qty').value, 10);
+            const days = parseInt(document.getElementById('batch-days').value, 10);
+            const alertBox = document.getElementById('batch-alert');
+
+            alertBox.classList.add('d-none');
+            if (!name || !email) {
+                alertBox.textContent = 'Por favor indique el nombre y email.';
+                alertBox.classList.remove('d-none');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/admin/batch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: JSON.stringify({
+                        customer_name: name,
+                        customer_email: email,
+                        tier,
+                        quantity: qty,
+                        seats_per_license: tier === 'laboratorio' ? 5 : 1,
+                        valid_days: days
+                    })
+                });
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `batch_licenses_${tier}_${qty}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                loadAdminData();
+            } catch (err) {
+                alertBox.textContent = `Error generando lote: ${err.message}`;
+                alertBox.classList.remove('d-none');
+            }
+        }
+
+        async function submitRevocation() {
+            const id = document.getElementById('revoke-id').value.trim();
+            const reason = document.getElementById('revoke-reason').value.trim();
+            const alertBox = document.getElementById('revoke-alert');
+
+            alertBox.classList.add('d-none');
+            if (!id || !reason) {
+                alertBox.textContent = 'Complete el ID y motivo de revocación.';
+                alertBox.classList.remove('d-none');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/admin/revoke', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: JSON.stringify({
+                        license_id: id,
+                        reason: reason
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Licencia revocada con éxito y agregada a la Lista Negra.');
+                    document.getElementById('revoke-id').value = '';
+                    document.getElementById('revoke-reason').value = '';
+                    loadAdminData();
+                } else {
+                    alertBox.textContent = data.message || 'Error al revocar.';
+                    alertBox.classList.remove('d-none');
+                }
+            } catch (err) {
+                alertBox.textContent = `Error: ${err.message}`;
+                alertBox.classList.remove('d-none');
+            }
+        }
+
+        loadAdminData();
+    </script>
+</body>
+</html>

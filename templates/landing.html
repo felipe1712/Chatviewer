@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatViewer Pro · Visor Forense y Conversor RSMF 2.0</title>
+
+    <!-- METADATOS SEO AVANZADOS -->
+    <meta name="description" content="ChatViewer Pro es el software forense para análisis, visualización y exportación de WhatsApp, Telegram y SMS al estándar oficial RSMF 2.0 (Relativity Short Message Format). Determinismo estricto SEG-2, llaves en memoria DES-1 y conformidad procesal ISO/IEC 27037.">
+    <meta name="keywords" content="RSMF 2.0, Relativity Short Message Format, peritaje informático, análisis forense WhatsApp, exportar WhatsApp a Relativity, evidencia digital, cadena de custodia, ISO 27037, visor forense de chats, chatviewer pro, eDiscovery chat, decodificar WhatsApp crypt14 crypt15, peritaje judicial digital, Nuix chat, Concordance">
+    <meta name="author" content="ChatViewer Pro Forensic Systems">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="http://chatviewer.pro/">
+    <meta name="theme-color" content="#1e40af">
+
+    <!-- OPEN GRAPH / FACEBOOK / LINKEDIN / WHATSAPP -->
+    <meta property="og:locale" content="es_LA">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ChatViewer Pro · Visor Forense y Conversor Oficial RSMF 2.0">
+    <meta property="og:description" content="Procesa bases de datos de WhatsApp, Telegram y SMS para peritajes judiciales y eDiscovery. Genera paquetes RSMF 2.0 con hashes duales SHA-256/MD5 y rigor ISO/IEC 27037.">
+    <meta property="og:url" content="http://chatviewer.pro/">
+    <meta property="og:site_name" content="ChatViewer Pro">
+    <meta property="og:image" content="http://chatviewer.pro/assets/img/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="ChatViewer Pro - Visor Forense y Conversor Oficial RSMF 2.0">
+
+    <!-- TWITTER CARDS -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ChatViewer Pro · Visor Forense y Conversor Oficial RSMF 2.0">
+    <meta name="twitter:description" content="El estándar definitivo para análisis forense, peritaje judicial y exportación RSMF 2.0 para Relativity y eDiscovery.">
+    <meta name="twitter:image" content="http://chatviewer.pro/assets/img/og-preview.png">
+
+    <!-- SCHEMA.ORG STRUCTURED DATA (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "@id": "http://chatviewer.pro/#software",
+          "name": "ChatViewer Pro",
+          "headline": "Visor Forense y Conversor Oficial RSMF 2.0 para Peritajes y eDiscovery",
+          "operatingSystem": "Windows 10, Windows 11, Windows Server, Linux x86_64",
+          "applicationCategory": "SecurityApplication, BusinessApplication",
+          "description": "Software pericial para análisis y conversión determinística de WhatsApp (Android/iOS), Telegram y SMS a paquetes RSMF 2.0 con validación estricta, hashes duales SHA-256/MD5 y conformidad ISO/IEC 27037.",
+          "softwareVersion": "2.0.0",
+          "url": "http://chatviewer.pro/",
+          "offers": [
+            {
+              "@type": "Offer",
+              "name": "Evaluación Gratuita (7 Días)",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Prueba de concepto forense completa durante 7 días."
+            },
+            {
+              "@type": "Offer",
+              "name": "Licencia Nivel Peritaje Anual",
+              "price": "499",
+              "priceCurrency": "USD",
+              "description": "1 Puesto de análisis forense permanente con exportación ilimitada RSMF 2.0."
+            },
+            {
+              "@type": "Offer",
+              "name": "Licencia Nivel Laboratorio Anual",
+              "price": "1899",
+              "priceCurrency": "USD",
+              "description": "5 Puestos forenses simultáneos con motor de reparación y soporte de Dongles USB."
+            }
+          ],
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "142",
+            "bestRating": "5",
+            "worstRating": "1"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "http://chatviewer.pro/#organization",
+          "name": "ChatViewer Pro Forensic Systems",
+          "url": "http://chatviewer.pro/",
+          "logo": "http://chatviewer.pro/assets/img/logo.png"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "http://chatviewer.pro/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Qué es el formato RSMF 2.0 y por qué es indispensable en sede judicial?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "RSMF (Relativity Short Message Format) 2.0 es el estándar global de la industria legal para presentar mensajería instantánea en litigios corporativos, arbitrajes y peritajes forenses. Permite estructurar canales, participantes, marcas de tiempo UTC, reacciones, adjuntos multimedia y eventos con total validez probatoria ante tribunales y plataformas como Relativity y Nuix."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿ChatViewer Pro requiere conexión a internet para procesar la evidencia (Air-Gapped)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. ChatViewer Pro opera 100% desconectado de la red (Air-Gapped Compliance) con cero telemetría externa. Cumple rigurosamente con la norma ISO/IEC 27037 para cuartos limpios y laboratorios forenses de alta seguridad."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Cómo se protege la confidencialidad de las llaves de descifrado (DES-1)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bajo la directriz forense DES-1, las llaves de descifrado simétrico (como las de WhatsApp crypt14 y crypt15) residen únicamente en la memoria RAM del proceso y se destruyen automáticamente al cerrar la sesión, impidiendo su almacenamiento en disco o archivos temporales."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Qué aplicaciones de mensajería y formatos son compatibles?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "ChatViewer Pro procesa bases de datos de WhatsApp para Android (msgstore.db y archivos cifrados .crypt14/.crypt15), WhatsApp para iOS (ChatStorage.sqlite de respaldos iTunes/Finder), Sherlock SMS y exportaciones forenses de Telegram."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Qué garantía de repetibilidad técnica ofrece ante una contraparte pericial (SEG-2)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Mediante determinismo estricto SEG-2, la misma base de datos peritada procesada en cualquier estación forense generará de forma idéntica los mismos hashes criptográficos (SHA-256 y MD5) y ordenamiento cronológico UTC, blindando el dictamen pericial contra objeciones procesales."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --bs-body-bg: #f8fafc;
+            --bs-body-color: #334155;
+            --forensic-primary: #1e40af;
+            --forensic-accent: #2563eb;
+            --forensic-accent-light: #eff6ff;
+            --forensic-border: #e2e8f0;
+            --forensic-card-bg: #ffffff;
+            --forensic-heading: #0f172a;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bs-body-bg);
+            color: var(--bs-body-color);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--forensic-heading);
+            letter-spacing: -0.02em;
+        }
+        .hero-section {
+            padding: 5.5rem 0 4rem;
+            background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+            border-bottom: 1px solid var(--forensic-border);
+        }
+        .feature-card {
+            background-color: var(--forensic-card-bg);
+            border: 1px solid var(--forensic-border);
+            border-radius: 0.85rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: #93c5fd;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        }
+        .pricing-card {
+            background-color: var(--forensic-card-bg);
+            border: 1px solid var(--forensic-border);
+            border-radius: 1rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.25s ease;
+        }
+        .pricing-card.featured {
+            border: 2px solid var(--forensic-accent);
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.15);
+        }
+        .badge-popular {
+            position: absolute;
+            top: -13px;
+            right: 24px;
+            background: var(--forensic-accent);
+            color: #ffffff;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+        }
+        /* Toggle Switch */
+        .billing-switch-bar {
+            display: inline-flex;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid var(--forensic-border);
+            padding: 6px 18px;
+            border-radius: 50px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            user-select: none;
+        }
+        .billing-switch-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+        .billing-switch-label:hover {
+            color: var(--forensic-primary);
+        }
+        .billing-switch-label.active {
+            color: var(--forensic-heading);
+            font-weight: 700;
+        }
+        .pricing-switch {
+            position: relative;
+            display: inline-block;
+            width: 54px;
+            height: 30px;
+            margin: 0 14px;
+        }
+        .pricing-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .pricing-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 34px;
+        }
+        .pricing-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: #ffffff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+        }
+        .pricing-switch input:checked + .pricing-slider {
+            background-color: var(--forensic-accent);
+        }
+        .pricing-switch input:checked + .pricing-slider:before {
+            transform: translateX(24px);
+        }
+        .pricing-price-num {
+            transition: all 0.2s ease-in-out;
+        }
+        .text-forensic {
+            color: var(--forensic-accent);
+        }
+        .btn-forensic {
+            background-color: var(--forensic-accent);
+            color: #ffffff;
+            border: none;
+        }
+        .btn-forensic:hover {
+            background-color: var(--forensic-primary);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top py-3" style="border-color: var(--forensic-border) !important;">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-dark d-flex align-items-center gap-2" href="#">
+                <i class="bi bi-shield-check text-primary fs-3"></i>
+                <span style="font-size: 1.25rem; font-weight: 800;">ChatViewer <span class="badge bg-primary text-white ms-1" style="font-size: 0.75rem;">PRO</span></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto align-items-center gap-3">
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="#features">Características</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="#security">Seguridad Forense</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="#pricing">Planes y Precios</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="#faq">Preguntas Frecuentes</a></li>
+                    <li class="nav-item">
+                        <a href="/portal" class="btn btn-outline-secondary btn-sm px-3 fw-semibold">
+                            <i class="bi bi-person-circle me-1"></i> Portal de Cliente
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#pricing" class="btn btn-primary btn-sm px-3 fw-bold">
+                            Obtener Licencia
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section text-center">
+        <div class="container">
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 mb-4 rounded-pill border border-primary border-opacity-25 bg-primary bg-opacity-10 text-primary small fw-bold">
+                <i class="bi bi-patch-check-fill"></i> Conformidad Oficial con el Estándar RSMF 2.0 y Evidencia Digital
+            </div>
+            <h1 class="display-4 fw-bold mb-3" style="font-size: 2.85rem; line-height: 1.15;">
+                El Estándar Definitivo para Análisis,<br>
+                <span class="text-primary">Visor y Exportación RSMF</span> Forense
+            </h1>
+            <p class="lead text-secondary mx-auto mb-4" style="max-width: 780px; font-size: 1.15rem;">
+                Procesa bases de datos de WhatsApp (Android & iOS), Sherlock SMS y Telegram con determinismo criptográfico (SEG-2), cálculo dual de hashes SHA-256 / MD5 y compatibilidad plena en laboratorios 100% aislados (Air-Gapped).
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="#pricing" class="btn btn-primary btn-lg px-4 fw-bold shadow-sm">
+                    <i class="bi bi-cart3 me-1"></i> Comprar Licencia Comercial
+                </a>
+                <a href="/download/evaluation" class="btn btn-outline-dark btn-lg px-4 fw-semibold">
+                    <i class="bi bi-download me-1"></i> Probar Gratis (7 Días)
+                </a>
+            </div>
+            <div class="d-flex justify-content-center align-items-center gap-4 mt-5 text-secondary small flex-wrap">
+                <div><i class="bi bi-check-circle-fill text-success me-1"></i> 100% Offline (Sin conexión requerida)</div>
+                <div><i class="bi bi-check-circle-fill text-success me-1"></i> Llave de cifrado en memoria (DES-1)</div>
+                <div><i class="bi bi-check-circle-fill text-success me-1"></i> Validador RSMF Integrado</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="py-5 bg-white">
+        <div class="container py-3">
+            <div class="text-center mb-5">
+                <span class="text-primary fw-bold text-uppercase small tracking-wide">Tecnología de Grado Pericial</span>
+                <h2 class="fw-bold mt-1">Ingeniería Forense sin Concesiones</h2>
+                <p class="text-secondary">Diseñado para peritos judiciales, ministerios públicos, fiscalías y firmas corporativas.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card p-4 h-100">
+                        <div class="d-inline-flex p-3 rounded-3 bg-primary bg-opacity-10 text-primary mb-3">
+                            <i class="bi bi-file-earmark-code fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold">Estándar Oficial RSMF 2.0</h5>
+                        <p class="text-secondary small mb-0">Genera paquetes EML/ZIP según la especificación oficial RSMF: mapeo de participantes, canales, reacciones, ediciones, acuses de lectura y adjuntos deduplicados por hash.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card p-4 h-100">
+                        <div class="d-inline-flex p-3 rounded-3 bg-primary bg-opacity-10 text-primary mb-3">
+                            <i class="bi bi-fingerprint fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold">Determinismo Estricto (SEG-2)</h5>
+                        <p class="text-secondary small mb-0">Garantía criptográfica: la misma base de datos de entrada produce exactamente el mismo hash de salida en cualquier estación forense gracias a timestamps UTC normalizados.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card p-4 h-100">
+                        <div class="d-inline-flex p-3 rounded-3 bg-primary bg-opacity-10 text-primary mb-3">
+                            <i class="bi bi-wrench-adjustable fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold">Reparador de RSMF Corruptos</h5>
+                        <p class="text-secondary small mb-0">Diagnostica y subsana paquetes exportados por herramientas de terceros con JSON mal formado, campos ausentes o discrepancias de cabeceras RFC (REP-1 a REP-4).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORENSIC SECURITY SECTION -->
+    <section id="security" class="py-5" style="background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border-top: 1px solid var(--forensic-border);">
+        <div class="container py-3">
+            <div class="text-center mb-5">
+                <span class="text-primary fw-bold text-uppercase small tracking-wide">
+                    <i class="bi bi-shield-lock-fill me-1"></i> Garantía Procesal y Cadena de Custodia
+                </span>
+                <h2 class="fw-bold mt-1">Seguridad y Rigor Forense Certificado</h2>
+                <p class="text-secondary mx-auto" style="max-width: 760px;">
+                    Desarrollado bajo el principio rector de no-alteración de evidencia digital, garantizando plena admisibilidad en sedes ministeriales y judiciales conforme al estándar <strong>ISO/IEC 27037</strong>.
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Col 1: Air-gapped -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card p-4 h-100 bg-white">
+                        <div class="d-inline-flex p-3 rounded-3 bg-success bg-opacity-10 text-success mb-3">
+                            <i class="bi bi-wifi-off fs-3"></i>
+                        </div>
+                        <div class="fw-bold small text-success text-uppercase tracking-wide mb-1">100% Offline</div>
+                        <h5 class="fw-bold fs-6">Laboratorios Air-Gapped</h5>
+                        <p class="text-secondary small mb-0">
+                            Cero telemetría externa. La herramienta funciona íntegramente sin acceso a internet, apta para cuartos limpios y laboratorios de máxima seguridad forense sin riesgo de fuga.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Col 2: In-Memory Key (DES-1) -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card p-4 h-100 bg-white">
+                        <div class="d-inline-flex p-3 rounded-3 bg-primary bg-opacity-10 text-primary mb-3">
+                            <i class="bi bi-cpu fs-3"></i>
+                        </div>
+                        <div class="fw-bold small text-primary text-uppercase tracking-wide mb-1">DES-1 Memoria Pura</div>
+                        <h5 class="fw-bold fs-6">Llaves Criptográficas en RAM</h5>
+                        <p class="text-secondary small mb-0">
+                            Las llaves de descifrado jamás tocan el disco rígido ni se guardan en logs. Residen únicamente en memoria volátil de proceso y se destruyen al cerrar la sesión de análisis.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Col 3: Hashing Dual (DES-2/DES-3) -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card p-4 h-100 bg-white">
+                        <div class="d-inline-flex p-3 rounded-3 bg-info bg-opacity-10 text-info mb-3">
+                            <i class="bi bi-hash fs-3"></i>
+                        </div>
+                        <div class="fw-bold small text-info text-uppercase tracking-wide mb-1">Dual-Hash SHA-256 / MD5</div>
+                        <h5 class="fw-bold fs-6">Integridad Criptográfica</h5>
+                        <p class="text-secondary small mb-0">
+                            Cálculo y cotejo simultáneo de hashes SHA-256 y MD5 en la evidencia en crudo y en los paquetes RSMF finales, asegurando una trazabilidad inalterable de principio a fin.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Col 4: Determinismo (SEG-2) -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card p-4 h-100 bg-white">
+                        <div class="d-inline-flex p-3 rounded-3 bg-warning bg-opacity-10 text-warning mb-3">
+                            <i class="bi bi-shield-check fs-3"></i>
+                        </div>
+                        <div class="fw-bold small text-uppercase tracking-wide mb-1" style="color: #b45309;">SEG-2 Determinismo</div>
+                        <h5 class="fw-bold fs-6">Repetibilidad Probatoria</h5>
+                        <p class="text-secondary small mb-0">
+                            Garantiza que cualquier perito contraparte en cualquier computadora obtendrá con exactitud matemática el mismo identificador y hash sobre la misma muestra peritada.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Judicial Compliance Callout -->
+            <div class="p-4 rounded-4 mt-4 bg-white border border-primary border-opacity-25 shadow-sm d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-3 rounded-circle bg-primary bg-opacity-10 text-primary">
+                        <i class="bi bi-file-earmark-check-fill fs-2"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-dark">Certificado Procesal y Reporte de Validación Integrado</h6>
+                        <p class="text-secondary small mb-0">
+                            Exporta automáticamente actas de verificación forense con metadatos de adquisición, sellado de tiempo y compatibilidad oficial con plataformas eDiscovery como <strong>Relativity, Nuix y Concordance</strong>.
+                        </p>
+                    </div>
+                </div>
+                <a href="#pricing" class="btn btn-outline-primary btn-sm px-3 py-2 fw-semibold text-nowrap">
+                    Ver Licencias Periciales <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING SECTION -->
+    <section id="pricing" class="py-5" style="background-color: #f8fafc; border-top: 1px solid var(--forensic-border); border-bottom: 1px solid var(--forensic-border);">
+        <div class="container py-3">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold mt-1">Planes de Licenciamiento Comercial</h2>
+                <p class="text-secondary mb-3">Procesamiento de pago 100% seguro con tarjeta internacional mediante <strong>Stripe</strong>.</p>
+
+                <!-- TOGGLE MENSUAL / ANUAL -->
+                <div class="d-flex justify-content-center align-items-center my-3">
+                    <div class="billing-switch-bar shadow-sm">
+                        <span class="billing-switch-label" id="label-monthly" onclick="setBillingCycle('monthly')">
+                            Facturación Mensual
+                        </span>
+                        <label class="pricing-switch" for="pricing-toggle-checkbox" title="Alternar entre facturación Mensual y Anual">
+                            <input type="checkbox" id="pricing-toggle-checkbox" checked onchange="onToggleSwitchChange(this.checked)">
+                            <span class="pricing-slider"></span>
+                        </label>
+                        <span class="billing-switch-label active" id="label-annual" onclick="setBillingCycle('annual')">
+                            Facturación Anual
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 justify-content-center mt-2">
+                <!-- TIER 1: FREE -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="pricing-card p-4 h-100">
+                        <h5 class="fw-bold mb-1">Evaluación Gratuita</h5>
+                        <p class="text-secondary small">Para prueba de concepto e inspección rápida.</p>
+                        <div class="my-3">
+                            <span class="display-5 fw-bold text-dark">$0</span>
+                            <span class="text-secondary">/ 7 días</span>
+                            <div class="text-muted small mt-1">Prueba completa sin costo de entrada</div>
+                        </div>
+                        <ul class="list-unstyled small text-secondary my-4 d-flex flex-column gap-2 flex-grow-1">
+                            <li><i class="bi bi-check text-primary me-2 fs-5"></i> 1 Puesto de análisis</li>
+                            <li><i class="bi bi-check text-primary me-2 fs-5"></i> Visualización 100% de chats y mensajes</li>
+                            <li><i class="bi bi-check text-primary me-2 fs-5"></i> Reproductor de audio y visor de adjuntos</li>
+                            <li><i class="bi bi-exclamation-triangle text-warning me-2 fs-5"></i> <strong>Límite:</strong> Exportación del 5% de mensajes</li>
+                            <li class="text-muted"><i class="bi bi-x text-muted me-2 fs-5"></i> Sin soporte técnico personalizado</li>
+                        </ul>
+                        <a href="/download/evaluation" class="btn btn-outline-dark w-100 py-2 fw-semibold">
+                            Descargar Versión Free
+                        </a>
+                    </div>
+                </div>
+
+                <!-- TIER 2: PERITAJE (FEATURED) -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="pricing-card featured p-4 h-100">
+                        <div class="badge-popular">Más Recomendado</div>
+                        <h5 class="fw-bold mb-1">Nivel Peritaje</h5>
+                        <p class="text-secondary small">Para peritos forenses y despachos jurídicos independientes.</p>
+                        <div class="my-3">
+                            <div class="d-flex align-items-baseline gap-1">
+                                <span class="display-5 fw-bold text-primary pricing-price-num" id="peritaje-price-display">$499</span>
+                                <span class="text-secondary fw-semibold" id="peritaje-period-display">/ año</span>
+                            </div>
+                            <div class="text-muted small mt-1" id="peritaje-subtext-display">$41 USD/mes (pago anual único)</div>
+                        </div>
+                        <ul class="list-unstyled small text-secondary my-4 d-flex flex-column gap-2 flex-grow-1">
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>1 Asiento de análisis permanente</strong></li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Exportación 100% ILIMITADA</strong></li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Formato RSMF 2.0 y XML Pericial con Hashes Duales</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Certificado de Hashes y Reporte Procesal HTML</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Soporte estándar por email (&lt; 24h)</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> 1 migración de máquina por año</li>
+                        </ul>
+                        <button class="btn btn-primary w-100 py-2 fw-bold shadow-sm" id="btn-cta-peritaje" onclick="triggerCheckout('peritaje')">
+                            Adquirir Peritaje Anual · $499 USD
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TIER 3: LABORATORIO -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="pricing-card p-4 h-100">
+                        <h5 class="fw-bold mb-1">Nivel Laboratorio</h5>
+                        <p class="text-secondary small">Para fiscalías, corporativos e instituciones de peritaje.</p>
+                        <div class="my-3">
+                            <div class="d-flex align-items-baseline gap-1">
+                                <span class="display-5 fw-bold text-dark pricing-price-num" id="lab-price-display">$1,899</span>
+                                <span class="text-secondary fw-semibold" id="lab-period-display">/ año</span>
+                            </div>
+                            <div class="text-muted small mt-1" id="lab-subtext-display">$158 USD/mes (pago anual único)</div>
+                        </div>
+                        <ul class="list-unstyled small text-secondary my-4 d-flex flex-column gap-2 flex-grow-1">
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>5 Asientos simultáneos</strong> (asientos extra +$299)</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Exportación e Importación Ilimitada</strong></li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Motor de Diagnóstico y Reparación de Terceros</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Soporte de llaves Dongle USB físicas</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Soporte Prioritario SLA &lt; 4 horas</strong></li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Logotipo y Carátula Institucional en Reportes</li>
+                        </ul>
+                        <button class="btn btn-outline-primary w-100 py-2 fw-bold" id="btn-cta-laboratorio" onclick="triggerCheckout('laboratorio')">
+                            Adquirir Laboratorio Anual · $1,899 USD
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION (SEO & RICH SNIPPETS) -->
+    <section id="faq" class="py-5 bg-white" style="border-top: 1px solid var(--forensic-border); border-bottom: 1px solid var(--forensic-border);">
+        <div class="container py-3" style="max-width: 900px;">
+            <div class="text-center mb-5">
+                <span class="text-primary fw-bold text-uppercase small tracking-wide">
+                    <i class="bi bi-question-circle-fill me-1"></i> Dudas Frecuentes de Peritaje
+                </span>
+                <h2 class="fw-bold mt-1">Preguntas Frecuentes sobre el Análisis Forense y Formato RSMF</h2>
+                <p class="text-secondary">
+                    Respuestas técnicas sobre validez probatoria, estándares judiciales y compatibilidad con plataformas eDiscovery.
+                </p>
+            </div>
+
+            <div class="accordion accordion-flush" id="accordionFaq">
+                <!-- FAQ 1 -->
+                <div class="accordion-item border rounded-3 mb-3 shadow-xs">
+                    <h3 class="accordion-header" id="headingOne">
+                        <button class="accordion-button fw-bold text-dark collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            ¿Qué es el formato RSMF 2.0 y por qué es indispensable en sede judicial?
+                        </button>
+                    </h3>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionFaq">
+                        <div class="accordion-body text-secondary small">
+                            <strong>RSMF (Relativity Short Message Format) 2.0</strong> es el estándar internacional para la ingestión y revisión de mensajería instantánea en litigios corporativos, arbitrajes internacionales y procesos penales. A diferencia de las exportaciones en texto plano o PDF (fácilmente impugnables por falta de contexto), el formato RSMF preserva de manera inalterable canales de conversación, participantes, marcas de tiempo UTC normalizadas, estados de entrega/lectura, reacciones, ediciones y adjuntos multimedia con cálculo de hash deduplicado.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="accordion-item border rounded-3 mb-3 shadow-xs">
+                    <h3 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button fw-bold text-dark collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            ¿ChatViewer Pro requiere conexión a internet para procesar la evidencia (Air-Gapped)?
+                        </button>
+                    </h3>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionFaq">
+                        <div class="accordion-body text-secondary small">
+                            <strong>No.</strong> ChatViewer Pro está concebido para operar en entornos 100% aislados (Air-Gapped) con cero telemetría externa. La herramienta funciona íntegramente de manera local sin realizar ninguna solicitud a internet durante el examen o conversión de las bases de datos, cumpliendo a cabalidad con las directrices de custodia e integridad del estándar <strong>ISO/IEC 27037:2012</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="accordion-item border rounded-3 mb-3 shadow-xs">
+                    <h3 class="accordion-header" id="headingThree">
+                        <button class="accordion-button fw-bold text-dark collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            ¿Cómo se protege la confidencialidad de las llaves de descifrado (DES-1)?
+                        </button>
+                    </h3>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionFaq">
+                        <div class="accordion-body text-secondary small">
+                            Bajo la directriz técnica <strong>DES-1 (Key Memory-Only)</strong>, las llaves simétricas necesarias para abrir bases de datos cifradas de WhatsApp (como archivos <code>.crypt14</code> y <code>.crypt15</code>) se mantienen exclusivamente en la memoria RAM volátil del proceso durante la sesión de trabajo. El sistema nunca escribe las llaves en disco duro ni en archivos de bitácora, previniendo exposiciones indebidas de material reservado.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="accordion-item border rounded-3 mb-3 shadow-xs">
+                    <h3 class="accordion-header" id="headingFour">
+                        <button class="accordion-button fw-bold text-dark collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            ¿Qué aplicaciones de mensajería y formatos son compatibles?
+                        </button>
+                    </h3>
+                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionFaq">
+                        <div class="accordion-body text-secondary small">
+                            ChatViewer Pro procesa bases de datos de <strong>WhatsApp para Android</strong> (archivos <code>msgstore.db</code> en crudo o respaldos cifrados con su llave), <strong>WhatsApp para iOS</strong> (bases <code>ChatStorage.sqlite</code> extraídas de copias de seguridad de iTunes/Finder), registros forenses de <strong>Sherlock SMS</strong> y volcados periciales de <strong>Telegram</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="accordion-item border rounded-3 mb-3 shadow-xs">
+                    <h3 class="accordion-header" id="headingFive">
+                        <button class="accordion-button fw-bold text-dark collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            ¿Qué garantía de repetibilidad técnica ofrece ante una contraparte pericial (SEG-2)?
+                        </button>
+                    </h3>
+                    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionFaq">
+                        <div class="accordion-body text-secondary small">
+                            Mediante el protocolo de <strong>Determinismo Criptográfico Estricto (SEG-2)</strong>, la misma base de datos de entrada procesada en cualquier computadora generará exactamente los mismos identificadores de mensaje, la misma estructura de paquetes y los mismos hashes duales de verificación (<strong>SHA-256 y MD5</strong>), asegurando que el dictamen pericial sea plenamente reproducible y refutable en tribunales conforme a los principios de la prueba pericial informática.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="modal-checkout" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-shield-lock-fill text-primary me-2"></i> Adquisición de Licencia Comercial
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="alert alert-primary bg-primary bg-opacity-10 border-0 py-2 small mb-3">
+                        Plan seleccionado: <strong id="checkout-plan-name" class="text-primary">--</strong>
+                        <div class="fw-bold mt-1 text-dark" id="checkout-plan-price">Total: $0 USD</div>
+                    </div>
+
+                    <!-- Selector de ciclo dentro del modal -->
+                    <div class="p-2 bg-light rounded border mb-3">
+                        <label class="form-label small fw-bold text-secondary mb-1">Periodo de Facturación:</label>
+                        <div class="btn-group w-100" role="group">
+                            <button type="button" class="btn btn-sm btn-outline-secondary fw-semibold" id="modal-btn-monthly" onclick="setBillingCycleFromModal('monthly')">
+                                <i class="bi bi-calendar-month me-1"></i> Facturación Mensual
+                            </button>
+                            <button type="button" class="btn btn-sm btn-primary fw-bold" id="modal-btn-annual" onclick="setBillingCycleFromModal('annual')">
+                                <i class="bi bi-calendar-check me-1"></i> Facturación Anual
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Nombre Completo o Titular *</label>
+                        <input type="text" class="form-control" id="cust-name" placeholder="Ej. Lic. Roberto Gómez" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Correo Electrónico (donde recibirás el acceso) *</label>
+                        <input type="email" class="form-control" id="cust-email" placeholder="correo@peritaje.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Despacho / Fiscalía / Empresa (Opcional)</label>
+                        <input type="text" class="form-control" id="cust-company" placeholder="Gómez & Asociados Forenses">
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3 p-3 border rounded bg-light mb-4">
+                        <i class="bi bi-shield-lock-fill text-primary fs-3"></i>
+                        <div>
+                            <div class="fw-bold text-dark">Pasarela de Pago Seguro · Stripe</div>
+                            <div class="text-secondary small">Cifrado bancario SSL de 256 bits · Tarjetas Visa, Mastercard, American Express</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="pay-provider-val" value="stripe">
+
+                    <div id="checkout-alert" class="alert alert-danger py-2 small d-none"></div>
+
+                    <button class="btn btn-primary w-100 py-2 fw-bold" id="btn-proceed-pay" onclick="proceedCheckout()">
+                        Continuar al Pago Seguro con Stripe <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="py-4 text-center text-secondary small bg-white border-top" style="border-color: var(--forensic-border) !important;">
+        <div class="container">
+            <p class="mb-1 fw-semibold text-dark">ChatViewer Pro © 2026 · Certificación Procesal y Análisis Forense Digital.</p>
+            <p class="text-muted mb-0">Cumple con los estándares internacionales ISO/IEC 27037 y la especificación oficial RSMF 2.0. Pagos seguros procesados con Stripe.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Configuración de Precios (Competitivo frente a Message Crawler de $400 USD/mes)
+        const PRICING_DATA = {
+            monthly: {
+                peritaje: {
+                    amount: 249,
+                    label: '$249',
+                    period: '/ mes',
+                    subtext: 'Cobro mensual recurrente · Sin plazos forzosos (cancela cuando quieras)',
+                    button: 'Adquirir Peritaje Mensual · $249 USD'
+                },
+                laboratorio: {
+                    amount: 599,
+                    label: '$599',
+                    period: '/ mes',
+                    subtext: 'Cobro mensual recurrente para 5 puestos · Flexibilidad total',
+                    button: 'Adquirir Laboratorio Mensual · $599 USD'
+                }
+            },
+            annual: {
+                peritaje: {
+                    amount: 499,
+                    label: '$499',
+                    period: '/ año',
+                    subtext: '$41 USD/mes (pago anual único)',
+                    button: 'Adquirir Peritaje Anual · $499 USD'
+                },
+                laboratorio: {
+                    amount: 1899,
+                    label: '$1,899',
+                    period: '/ año',
+                    subtext: '$158 USD/mes (pago anual único)',
+                    button: 'Adquirir Laboratorio Anual · $1,899 USD'
+                }
+            }
+        };
+
+        // Enlaces de pago personalizados directos opcionales (si se definen, tienen prioridad sobre el checkout automático)
+        const CUSTOM_PAYMENT_LINKS = {
+            peritaje_annual: '',    // Ej: 'https://buy.stripe.com/...'
+            peritaje_monthly: '',   // Ej: 'https://buy.stripe.com/...'
+            laboratorio_annual: '',
+            laboratorio_monthly: ''
+        };
+
+        let currentCycle = 'annual';
+        let selectedTier = 'peritaje';
+        let selectedAmount = 499;
+
+        function setBillingCycle(cycle) {
+            currentCycle = cycle;
+            const isAnnual = (cycle === 'annual');
+
+            // Actualizar checkbox toggle
+            const switchEl = document.getElementById('pricing-toggle-checkbox');
+            if (switchEl) {
+                switchEl.checked = isAnnual;
+            }
+
+            // Actualizar labels del toggle
+            const lblMonthly = document.getElementById('label-monthly');
+            const lblAnnual = document.getElementById('label-annual');
+            if (lblMonthly) lblMonthly.classList.toggle('active', !isAnnual);
+            if (lblAnnual) lblAnnual.classList.toggle('active', isAnnual);
+
+            // Peritaje Card
+            const pData = PRICING_DATA[cycle].peritaje;
+            document.getElementById('peritaje-price-display').textContent = pData.label;
+            document.getElementById('peritaje-period-display').textContent = pData.period;
+            document.getElementById('peritaje-subtext-display').textContent = pData.subtext;
+            const btnP = document.getElementById('btn-cta-peritaje');
+            if (btnP) btnP.textContent = pData.button;
+
+            // Laboratorio Card
+            const lData = PRICING_DATA[cycle].laboratorio;
+            document.getElementById('lab-price-display').textContent = lData.label;
+            document.getElementById('lab-period-display').textContent = lData.period;
+            document.getElementById('lab-subtext-display').textContent = lData.subtext;
+            const btnL = document.getElementById('btn-cta-laboratorio');
+            if (btnL) btnL.textContent = lData.button;
+
+            // Sincronizar modal
+            syncModalDetails();
+        }
+
+        function onToggleSwitchChange(isChecked) {
+            setBillingCycle(isChecked ? 'annual' : 'monthly');
+        }
+
+        function setBillingCycleFromModal(cycle) {
+            setBillingCycle(cycle);
+        }
+
+        function syncModalDetails() {
+            if (!selectedTier) return;
+            const data = PRICING_DATA[currentCycle][selectedTier];
+            selectedAmount = data.amount;
+
+            const modalTitle = `Nivel ${selectedTier === 'peritaje' ? 'Peritaje (1 Asiento)' : 'Laboratorio (5 Asientos)'}`;
+            const cycleText = currentCycle === 'annual' ? 'Facturación Anual' : 'Facturación Mensual';
+            const nameEl = document.getElementById('checkout-plan-name');
+            if (nameEl) nameEl.textContent = `${modalTitle} · ${cycleText}`;
+            
+            const priceEl = document.getElementById('checkout-plan-price');
+            if (priceEl) priceEl.textContent = `Total a pagar: $${data.amount} USD ${data.period}`;
+
+            const mBtnMonthly = document.getElementById('modal-btn-monthly');
+            const mBtnAnnual = document.getElementById('modal-btn-annual');
+            if (mBtnMonthly && mBtnAnnual) {
+                if (currentCycle === 'annual') {
+                    mBtnAnnual.className = 'btn btn-sm btn-primary fw-bold';
+                    mBtnMonthly.className = 'btn btn-sm btn-outline-secondary fw-semibold';
+                } else {
+                    mBtnAnnual.className = 'btn btn-sm btn-outline-secondary fw-semibold';
+                    mBtnMonthly.className = 'btn btn-sm btn-primary fw-bold';
+                }
+            }
+        }
+
+        function triggerCheckout(tier) {
+            selectedTier = tier;
+            const data = PRICING_DATA[currentCycle][tier];
+            selectedAmount = data.amount;
+
+            // Si hay un Payment Link manual configurado por el usuario, redirigir directamente
+            const key = `${tier}_${currentCycle}`;
+            if (CUSTOM_PAYMENT_LINKS[key] && CUSTOM_PAYMENT_LINKS[key].trim() !== '') {
+                window.location.href = CUSTOM_PAYMENT_LINKS[key];
+                return;
+            }
+
+            syncModalDetails();
+            document.getElementById('checkout-alert').classList.add('d-none');
+            const modal = new bootstrap.Modal(document.getElementById('modal-checkout'));
+            modal.show();
+        }
+
+        async function proceedCheckout() {
+            const name = document.getElementById('cust-name').value.trim();
+            const email = document.getElementById('cust-email').value.trim();
+            const company = document.getElementById('cust-company').value.trim();
+            const provider = 'stripe';
+            const alertBox = document.getElementById('checkout-alert');
+            const payBtn = document.getElementById('btn-proceed-pay');
+
+            alertBox.classList.add('d-none');
+            if (!name || !email) {
+                alertBox.textContent = 'Por favor complete su nombre y correo electrónico.';
+                alertBox.classList.remove('d-none');
+                return;
+            }
+
+            payBtn.disabled = true;
+            payBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Iniciando pago seguro...';
+
+            try {
+                const res = await fetch('/api/checkout/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        company: company || null,
+                        tier: selectedTier,
+                        provider,
+                        billing_cycle: currentCycle,
+                        amount_override: selectedAmount
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.checkout_url) {
+                    window.location.href = data.checkout_url;
+                } else {
+                    alertBox.textContent = data.message || 'Error al iniciar la sesión de pago.';
+                    alertBox.classList.remove('d-none');
+                    payBtn.disabled = false;
+                    payBtn.innerHTML = 'Continuar al Pago Seguro con Stripe <i class="bi bi-arrow-right ms-1"></i>';
+                }
+            } catch (err) {
+                alertBox.textContent = `Error de red: ${err.message}`;
+                alertBox.classList.remove('d-none');
+                payBtn.disabled = false;
+                payBtn.innerHTML = 'Continuar al Pago Seguro con Stripe <i class="bi bi-arrow-right ms-1"></i>';
+            }
+        }
+    </script>
+</body>
+</html>
