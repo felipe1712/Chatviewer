@@ -4,7 +4,7 @@ services:
     container_name: causer-license-engine
     restart: always
     ports:
-      - "8095:8095"
+      - "8096:8095"
     volumes:
       - ./data:/app/data
     env_file:
