@@ -1,7 +1,7 @@
 services:
-  license-server:
+  license-engine:
     build: .
-    container_name: chatproof-server
+    container_name: causer-license-engine
     restart: always
     ports:
       - "8095:8095"

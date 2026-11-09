@@ -79,7 +79,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 5. Configurar Enrutador Axum
     let app = Router::new()
         // --- SITIO PÚBLICO (LANDING PAGE & SEO) ---
-        .route("/", get(handlers::landing::serve_landing))
+        .route("/", get(handlers::landing::serve_hub))
+        .route("/chatproof", get(handlers::landing::serve_landing))
         .route("/portal", get(handlers::landing::serve_portal))
         .route("/admin", get(handlers::landing::serve_admin))
         .route("/download/evaluation", get(handlers::landing::download_free_evaluation))
@@ -113,7 +114,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let addr = SocketAddr::from(([0, 0, 0, 0], config.port));
     info!("============================================================");
-    info!(" Servidor Central de Licencias ChatProof Pro");
+    info!(" Causer Engine · Servidor Central (admin.causer.com.mx)");
     info!(" Escuchando en: http://{}", addr);
     info!(" - Landing pública:     http://localhost:{}", config.port);
     info!(" - Portal cliente:      http://localhost:{}/portal", config.port);

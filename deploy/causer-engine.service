@@ -1,0 +1,15 @@
+[Unit]
+Description=Causer Engine Standalone Licensing and Multi-SaaS Server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/causer-engine
+ExecStart=/var/www/causer-engine/target/release/license-server
+Restart=always
+RestartSec=5
+EnvironmentFile=/var/www/causer-engine/.env
+
+[Install]
+WantedBy=multi-user.target
