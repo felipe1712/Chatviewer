@@ -11,6 +11,9 @@
     <meta name="author" content="Causer Consulting">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://chatproof.pro/">
+    <link rel="alternate" hreflang="es" href="https://chatproof.pro/">
+    <link rel="alternate" hreflang="en" href="https://chatproof.pro/en">
+    <link rel="alternate" hreflang="x-default" href="https://chatproof.pro/">
     <meta name="theme-color" content="#0F1720">
 
     <!-- OPEN GRAPH / SOCIAL -->
@@ -230,6 +233,33 @@
         .btn-cp-pill-cta:hover {
             background: var(--cp-accent-hover);
             transform: translateY(-1px);
+        }
+
+        /* SELECTOR DE IDIOMA */
+        .lang-switch-pill {
+            background: var(--cp-surface);
+            border: 1px solid var(--cp-border-bright);
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 12.5px;
+            font-weight: 600;
+            gap: 6px;
+        }
+        .lang-opt {
+            color: var(--cp-text-muted);
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+        .lang-opt:hover {
+            color: #FFFFFF;
+        }
+        .lang-opt.active {
+            color: var(--cp-accent-mint);
+            font-weight: 700;
+        }
+        .lang-sep {
+            color: var(--cp-border-bright);
+            font-size: 11px;
         }
 
         /* HERO SECTION */
@@ -555,7 +585,14 @@
                 <a href="/portal" class="cp-nav-link">Portal Clientes</a>
             </div>
 
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center gap-3">
+                <!-- SELECTOR DE IDIOMA -->
+                <div class="lang-switch-pill d-flex align-items-center font-mono">
+                    <span class="lang-opt active" title="Versión en Español">ES</span>
+                    <span class="lang-sep">|</span>
+                    <a href="/en" class="lang-opt" title="English Version">EN</a>
+                </div>
+
                 <a href="/download/evaluation" class="btn-cp-pill-cta">
                     Prueba 7 días
                 </a>
@@ -1151,56 +1188,56 @@
 
             <div class="accordion" id="accordionFaq">
                 <!-- FAQ 1 -->
-                <div class="accordion-item cp-accordion-item">
+                <div class="cp-accordion-item">
                     <h3 class="accordion-header" id="headingOne">
                         <button class="accordion-button cp-accordion-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
                             ¿Cómo sustenta ChatProof la admisibilidad de la evidencia ante un tribunal?
                         </button>
                     </h3>
                     <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFaq">
-                        <div class="accordion-body cp-accordion-body">
+                        <div class="cp-accordion-body">
                             La admisibilidad legal es decisión exclusiva del juez o tribunal. ChatProof proporciona al perito las herramientas técnicas necesarias para defender la integridad de la prueba siguiendo los principios de ISO/IEC 27037: calcula hashes criptográficos duales (SHA-256 y MD5), genera una bitácora de auditoría inalterable encadenada por eventos (Hash Chaining), concilia los totales de control y procesa la evidencia en un entorno 100% desconectado de la red (Air-Gapped).
                         </div>
                     </div>
                 </div>
 
                 <!-- FAQ 2 -->
-                <div class="accordion-item cp-accordion-item">
+                <div class="cp-accordion-item">
                     <h3 class="accordion-header" id="headingTwo">
                         <button class="accordion-button cp-accordion-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
                             ¿Por qué es fundamental contar con un reporte en PDF además de RSMF 2.0?
                         </button>
                     </h3>
                     <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFaq">
-                        <div class="accordion-body cp-accordion-body">
+                        <div class="cp-accordion-body">
                             El formato RSMF 2.0 es el estándar legal para plataformas eDiscovery corporativas como Relativity. Sin embargo, en el litigio cotidiano y ante los juzgados locales o federales, los abogados y secretarios de acuerdos exigen documentos foliados y legibles en PDF que puedan incorporarse al expediente físico o digital con carátula formal, cronología en UTC, identificación de participantes y certificación de hashes.
                         </div>
                     </div>
                 </div>
 
                 <!-- FAQ 3 -->
-                <div class="accordion-item cp-accordion-item">
+                <div class="cp-accordion-item">
                     <h3 class="accordion-header" id="headingThree">
                         <button class="accordion-button cp-accordion-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
                             ¿Cómo opera la seguridad en entornos desconectados (Air-Gapped)?
                         </button>
                     </h3>
                     <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFaq">
-                        <div class="accordion-body cp-accordion-body">
+                        <div class="cp-accordion-body">
                             ChatProof está diseñado para funcionar en estaciones de trabajo y laboratorios 100% desconectados de internet. Cero telemetría externa, sin transmisiones a nubes ajenas y con activación mediante licencias criptográficas offline firmadas por el servidor.
                         </div>
                     </div>
                 </div>
 
                 <!-- FAQ 4 -->
-                <div class="accordion-item cp-accordion-item">
+                <div class="cp-accordion-item">
                     <h3 class="accordion-header" id="headingFour">
                         <button class="accordion-button cp-accordion-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
                             ¿Cómo funciona la Licencia Por Caso?
                         </button>
                     </h3>
                     <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFaq">
-                        <div class="accordion-body cp-accordion-body">
+                        <div class="cp-accordion-body">
                             La licencia por caso ($89 USD) está pensada para peritos independientes que atienden expedientes puntuales y desean trasladar el costo directo de la herramienta a los gastos periciales del cliente. Otorga procesamiento y exportación 100% ilimitada a PDF y RSMF para la base peritada de ese expediente.
                         </div>
                     </div>

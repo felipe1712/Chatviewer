@@ -80,6 +80,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = Router::new()
         // --- SITIO PÚBLICO (LANDING PAGE & SEO) ---
         .route("/", get(handlers::landing::serve_landing))
+        .route("/en", get(handlers::landing::serve_landing_en))
+        .route("/en/", get(handlers::landing::serve_landing_en))
         .route("/portal", get(handlers::landing::serve_portal))
         .route("/admin", get(handlers::landing::serve_admin))
         .route("/download/evaluation", get(handlers::landing::download_free_evaluation))
@@ -110,9 +112,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!("============================================================");
     info!(" Servidor Central de Licencias ChatProof Pro");
     info!(" Escuchando en: http://{}", addr);
-    info!(" - Landing pública:     http://localhost:{}", config.port);
-    info!(" - Portal cliente:      http://localhost:{}/portal", config.port);
-    info!(" - Panel administrador: http://localhost:{}/admin", config.port);
+    info!(" - Landing pública (ES): http://localhost:{}", config.port);
+    info!(" - Landing pública (EN): http://localhost:{}/en", config.port);
+    info!(" - Portal cliente:       http://localhost:{}/portal", config.port);
+    info!(" - Panel administrador:  http://localhost:{}/admin", config.port);
     info!("============================================================");
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
