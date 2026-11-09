@@ -1,5 +1,6 @@
 use chrono::{Duration, Utc};
 use hmac::{Hmac, Mac};
+use serde::{Deserialize, Serialize};
 use sha2::Sha256;
 use sqlx::{Row, SqlitePool};
 use subtle::ConstantTimeEq;
@@ -160,7 +161,7 @@ pub async fn validate_token(db: &SqlitePool, master_token: &str, token: &str) ->
     })
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SessionUser {
     pub id: String,
     pub email: String,
