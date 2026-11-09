@@ -264,7 +264,7 @@ pub async fn download_license(
             (header::CONTENT_TYPE, "application/json"),
             (
                 header::CONTENT_DISPOSITION,
-                &format!("attachment; filename=\"chatviewer_license_{}.lic\"", lic.id),
+                &format!("attachment; filename=\"chatproof_license_{}.lic\"", lic.id),
             ),
         ],
         lic_json,

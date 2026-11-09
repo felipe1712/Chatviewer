@@ -89,7 +89,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let addr = SocketAddr::from(([0, 0, 0, 0], config.port));
     info!("============================================================");
-    info!(" Servidor Central de Licencias ChatViewer Pro");
+    info!(" Servidor Central de Licencias ChatProof Pro");
     info!(" Escuchando en: http://{}", addr);
     info!(" - Landing pública:     http://localhost:{}", config.port);
     info!(" - Portal cliente:      http://localhost:{}/portal", config.port);

@@ -1,6 +1,6 @@
-# ChatViewer Pro · Servidor Comercial de Licencias y Sitio Web
+# ChatProof Pro · Servidor Comercial de Licencias y Sitio Web
 
-Repositorio del sitio público, portal de clientes, panel de administración y servidor de emisión de licencias criptográficas para **ChatViewer Pro** ([http://chatviewer.pro](http://chatviewer.pro)).
+Repositorio del sitio público, portal de clientes, panel de administración y servidor de emisión de licencias criptográficas para **ChatProof Pro** ([http://chatproof.pro](http://chatproof.pro)).
 
 ---
 
@@ -44,18 +44,18 @@ cp .env.example .env
 cargo build --release
 
 # 3. Configurar servicio systemd
-sudo cp deploy/chatviewer.service /etc/systemd/system/
+sudo cp deploy/chatproof.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable chatviewer
-sudo systemctl start chatviewer
+sudo systemctl enable chatproof
+sudo systemctl start chatproof
 ```
 
 ---
 
 ## 🌐 Configuración de Nginx (Puerto 80)
-Copia el archivo `deploy/nginx.conf` a `/etc/nginx/sites-available/chatviewer.pro`:
+Copia el archivo `deploy/nginx.conf` a `/etc/nginx/sites-available/chatproof.pro`:
 ```bash
-sudo cp deploy/nginx.conf /etc/nginx/sites-available/chatviewer.pro
-sudo ln -s /etc/nginx/sites-available/chatviewer.pro /etc/nginx/sites-enabled/
+sudo cp deploy/nginx.conf /etc/nginx/sites-available/chatproof.pro
+sudo ln -s /etc/nginx/sites-available/chatproof.pro /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```

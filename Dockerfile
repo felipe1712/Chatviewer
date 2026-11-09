@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile para ChatViewer Pro License Server
+# Multi-stage Dockerfile para ChatProof Pro License Server
 FROM rust:latest as builder
 WORKDIR /usr/src/app
 

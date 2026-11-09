@@ -27,7 +27,7 @@
         <div class="container-fluid px-4">
             <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
                 <i class="bi bi-shield-shaded text-danger fs-4"></i>
-                <span>ChatViewer <span class="badge bg-danger ms-1">ADMIN</span></span>
+                <span>ChatProof <span class="badge bg-danger ms-1">ADMIN</span></span>
             </a>
             <div class="d-flex align-items-center gap-3">
                 <span class="badge bg-secondary" id="kpi-env">Producción / Air-Gapped Master</span>
@@ -174,13 +174,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        let adminToken = localStorage.getItem('chatviewer_admin_token') || 'forensic-admin-master-key-2026';
+        let adminToken = localStorage.getItem('chatproof_admin_token') || localStorage.getItem('chatviewer_admin_token') || 'forensic-admin-master-key-2026';
 
         function promptChangeToken() {
-            const current = localStorage.getItem('chatviewer_admin_token') || 'forensic-admin-master-key-2026';
+            const current = localStorage.getItem('chatproof_admin_token') || localStorage.getItem('chatviewer_admin_token') || 'forensic-admin-master-key-2026';
             const val = prompt('Ingresa tu clave secreta de Administrador (ADMIN_TOKEN):', current);
             if (val !== null && val.trim() !== '') {
-                localStorage.setItem('chatviewer_admin_token', val.trim());
+                localStorage.setItem('chatproof_admin_token', val.trim());
                 adminToken = val.trim();
                 loadAdminData();
             }

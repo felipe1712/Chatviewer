@@ -25,7 +25,7 @@ pub async fn handle_stripe_webhook(
         .and_then(|h| h.to_str().ok())
         .unwrap_or("");
 
-    if !state.config.stripe_webhook_secret.starts_with("whsec_test_chatviewer_placeholder") {
+    if !state.config.stripe_webhook_secret.starts_with("whsec_test_chatproof_placeholder") && !state.config.stripe_webhook_secret.starts_with("whsec_test_chatviewer_placeholder") {
         let is_valid = verify_stripe_signature(&body, sig_header, &state.config.stripe_webhook_secret);
         if !is_valid {
             return (StatusCode::BAD_REQUEST, "Firma de webhook inválida").into_response();

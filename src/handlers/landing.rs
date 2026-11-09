@@ -11,9 +11,9 @@ const LANDING_HTML: &str = include_str!("../../templates/landing.html");
 const PORTAL_HTML: &str = include_str!("../../templates/portal.html");
 const ADMIN_HTML: &str = include_str!("../../templates/admin.html");
 
-const ROBOTS_TXT: &str = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\n\nSitemap: http://chatviewer.pro/sitemap.xml\n";
+const ROBOTS_TXT: &str = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\n\nSitemap: http://chatproof.pro/sitemap.xml\n";
 
-const SITEMAP_XML: &str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>http://chatviewer.pro/</loc>\n    <lastmod>2026-11-06</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>\n  <url>\n    <loc>http://chatviewer.pro/portal</loc>\n    <lastmod>2026-11-06</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n</urlset>\n";
+const SITEMAP_XML: &str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>http://chatproof.pro/</loc>\n    <lastmod>2026-11-09</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>\n  <url>\n    <loc>http://chatproof.pro/portal</loc>\n    <lastmod>2026-11-09</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n</urlset>\n";
 
 pub async fn serve_landing() -> Html<&'static str> {
     Html(LANDING_HTML)
@@ -53,7 +53,7 @@ pub async fn download_free_evaluation(
     let payload = LicensePayload {
         license_id: format!("FREE-EVAL-{}", &uuid::Uuid::new_v4().to_string()[..8].to_uppercase()),
         customer_name: "Evaluación Pericial (7 Días)".to_string(),
-        customer_email: "evaluacion@chatviewer.pro".to_string(),
+        customer_email: "evaluacion@chatproof.pro".to_string(),
         tier: LicenseTier::Free,
         seats: 1,
         machine_fingerprint: None,
@@ -72,7 +72,7 @@ pub async fn download_free_evaluation(
             (header::CONTENT_TYPE, "application/json"),
             (
                 header::CONTENT_DISPOSITION,
-                "attachment; filename=\"chatviewer_free_trial.lic\"",
+                "attachment; filename=\"chatproof_free_trial.lic\"",
             ),
         ],
         lic_json,

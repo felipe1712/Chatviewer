@@ -31,12 +31,12 @@ impl EmailService {
             r#"
             <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b; padding: 20px;">
                 <div style="text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 20px; margin-bottom: 20px;">
-                    <h2 style="color: #1e40af; margin: 0;">ChatViewer <span style="background: #2563eb; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 14px;">PRO</span></h2>
+                    <h2 style="color: #1e40af; margin: 0;">ChatProof <span style="background: #2563eb; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 14px;">PRO</span></h2>
                     <p style="color: #64748b; font-size: 14px; margin: 5px 0 0;">Certificación Procesal y Análisis Forense Digital</p>
                 </div>
 
                 <p>Estimado(a) <strong>{}</strong>,</p>
-                <p>Tu orden de compra ha sido confirmada exitosamente. Adjunto a este correo encontrarás tu archivo oficial de licencia criptográfica (<strong>chatviewer_license.lic</strong>).</p>
+                <p>Tu orden de compra ha sido confirmada exitosamente. Adjunto a este correo encontrarás tu archivo oficial de licencia criptográfica (<strong>chatproof_license.lic</strong>).</p>
 
                 <div style="background: #f1f5f9; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0; border-radius: 4px;">
                     <div><strong>ID de Licencia:</strong> <span style="font-family: monospace;">{}</span></div>
@@ -44,18 +44,18 @@ impl EmailService {
                     <div><strong>Validez:</strong> 100% Offline (Compatible con Laboratorios Aislados)</div>
                 </div>
 
-                <h3>¿Cómo activar tu licencia en ChatViewer Pro?</h3>
+                <h3>¿Cómo activar tu licencia en ChatProof Pro?</h3>
                 <ol style="line-height: 1.6;">
-                    <li>Abre <strong>ChatViewer Pro</strong> en tu estación de trabajo.</li>
+                    <li>Abre <strong>ChatProof Pro</strong> en tu estación de trabajo.</li>
                     <li>Haz clic en el botón <strong>Licencia</strong> en la barra superior.</li>
-                    <li>Abre el archivo adjunto <code>chatviewer_license.lic</code> con un bloc de notas, copia el contenido JSON y pégalo en la ventana de activación.</li>
+                    <li>Abre el archivo adjunto <code>chatproof_license.lic</code> con un bloc de notas, copia el contenido JSON y pégalo en la ventana de activación.</li>
                     <li>Presiona <strong>Instalar y Validar Licencia</strong>.</li>
                 </ol>
 
                 <p style="margin-top: 25px;">Si necesitas gestionar tus estaciones o reasignar un puesto, puedes acceder a tu <a href="{}/portal?email={}" style="color: #2563eb; font-weight: bold;">Portal de Autogestión</a>.</p>
 
                 <div style="border-top: 1px solid #e2e8f0; margin-top: 30px; padding-top: 15px; font-size: 12px; color: #94a3b8; text-align: center;">
-                    ChatViewer Pro © 2026 · Cumple con los estándares procesales ISO/IEC 27037 y RSMF 2.0.
+                    ChatProof Pro © 2026 · Cumple con los estándares procesales ISO/IEC 27037 y RSMF 2.0.
                 </div>
             </div>
             "#,
@@ -73,11 +73,11 @@ impl EmailService {
                     "name": to_name
                 }
             ],
-            "subject": format!("Tu Licencia Comercial de ChatViewer Pro ({})", license_id),
+            "subject": format!("Tu Licencia Comercial de ChatProof Pro ({})", license_id),
             "htmlContent": html_content,
             "attachment": [
                 {
-                    "name": "chatviewer_license.lic",
+                    "name": "chatproof_license.lic",
                     "content": base64_content
                 }
             ]

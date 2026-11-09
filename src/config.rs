@@ -27,16 +27,16 @@ impl Config {
             .unwrap_or_else(|_| "sqlite:data/licenses.db?mode=rwc".to_string());
 
         let master_license_secret = env::var("MASTER_LICENSE_SECRET")
-            .unwrap_or_else(|_| "ChatViewer-Pro-Forensic-Standalone-License-Root-Key-2026".to_string());
+            .unwrap_or_else(|_| "ChatProof-Pro-Forensic-Standalone-License-Root-Key-2026".to_string());
 
         let stripe_secret_key = env::var("STRIPE_SECRET_KEY")
-            .unwrap_or_else(|_| "sk_test_chatviewer_placeholder".to_string());
+            .unwrap_or_else(|_| "sk_test_chatproof_placeholder".to_string());
 
         let stripe_webhook_secret = env::var("STRIPE_WEBHOOK_SECRET")
-            .unwrap_or_else(|_| "whsec_test_chatviewer_placeholder".to_string());
+            .unwrap_or_else(|_| "whsec_test_chatproof_placeholder".to_string());
 
         let public_url = env::var("PUBLIC_URL")
-            .unwrap_or_else(|_| "http://chatviewer.pro".to_string());
+            .unwrap_or_else(|_| "http://chatproof.pro".to_string());
 
         let stripe_success_url = env::var("STRIPE_SUCCESS_URL")
             .unwrap_or_else(|_| format!("{}/portal?session_id={{CHECKOUT_SESSION_ID}}", public_url));
@@ -48,10 +48,10 @@ impl Config {
             .unwrap_or_else(|_| "brevo_api_key_placeholder".to_string());
 
         let brevo_sender_email = env::var("BREVO_SENDER_EMAIL")
-            .unwrap_or_else(|_| "licensing@chatviewer.pro".to_string());
+            .unwrap_or_else(|_| "licensing@chatproof.pro".to_string());
 
         let brevo_sender_name = env::var("BREVO_SENDER_NAME")
-            .unwrap_or_else(|_| "ChatViewer Pro".to_string());
+            .unwrap_or_else(|_| "ChatProof Pro".to_string());
 
         let admin_token = env::var("ADMIN_TOKEN")
             .unwrap_or_else(|_| "forensic-admin-master-key-2026".to_string());

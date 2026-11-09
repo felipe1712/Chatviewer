@@ -1,4 +1,4 @@
--- Migración inicial para el Servidor de Licencias de ChatViewer Pro
+-- Migración inicial para el Servidor de Licencias de ChatProof Pro
 
 CREATE TABLE IF NOT EXISTS customers (
     id TEXT PRIMARY KEY,

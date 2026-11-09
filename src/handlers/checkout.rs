@@ -66,14 +66,14 @@ pub async fn create_checkout(
     let provider = "stripe".to_string();
 
     // 2. Determinar URL de Checkout de Stripe
-    let checkout_url = if state.config.stripe_secret_key.starts_with("sk_test_chatviewer_placeholder") {
+    let checkout_url = if state.config.stripe_secret_key.starts_with("sk_test_chatproof_placeholder") || state.config.stripe_secret_key.starts_with("sk_test_chatviewer_placeholder") {
         format!("{}/portal?session_id={}&email={}&simulated=true", state.config.public_url, session_id, req.email)
     } else {
         let client = reqwest::Client::new();
         let params = [
             ("payment_method_types[0]", "card"),
             ("line_items[0][price_data][currency]", "usd"),
-            ("line_items[0][price_data][product_data][name]", &format!("ChatViewer Pro - Nivel {}", tier_enum.as_str().to_uppercase())),
+            ("line_items[0][price_data][product_data][name]", &format!("ChatProof Pro - Nivel {}", tier_enum.as_str().to_uppercase())),
             ("line_items[0][price_data][unit_amount]", &amount_cents.to_string()),
             ("line_items[0][quantity]", "1"),
             ("mode", "payment"),

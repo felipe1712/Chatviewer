@@ -94,7 +94,7 @@ pub struct SignedLicense {
 pub struct LicenseSigner;
 
 impl LicenseSigner {
-    /// Firma criptográfica determinista compatible con ChatViewer Pro
+    /// Firma criptográfica determinista compatible con ChatProof Pro
     pub fn sign(payload: LicensePayload, secret: &[u8]) -> SignedLicense {
         let payload_json = serde_json::to_string(&payload)
             .expect("El payload de licencia siempre debe ser serializable a JSON");

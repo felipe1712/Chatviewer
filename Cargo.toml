@@ -2,8 +2,8 @@
 name = "license-server"
 version = "1.0.0"
 edition = "2021"
-authors = ["ChatViewer Pro Team <licensing@chatviewer.pro>"]
-description = "Servidor Comercial de Licencias, Landing Page, Portal de Autogestión, Stripe y Brevo Email para ChatViewer Pro"
+authors = ["ChatProof Pro Team <licensing@chatproof.pro>"]
+description = "Servidor Comercial de Licencias, Landing Page, Portal de Autogestión, Stripe y Brevo Email para ChatProof Pro"
 
 [dependencies]
 axum = { version = "0.7.9", features = ["macros", "multipart"] }

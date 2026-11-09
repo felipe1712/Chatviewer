@@ -1,7 +1,7 @@
 services:
   license-server:
     build: .
-    container_name: chatviewer-server
+    container_name: chatproof-server
     restart: always
     ports:
       - "8095:8095"

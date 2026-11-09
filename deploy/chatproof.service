@@ -1,5 +1,5 @@
 [Unit]
-Description=ChatViewer Pro License Server and Public Site
+Description=ChatProof Pro License Server and Public Site
 After=network.target
 
 [Service]

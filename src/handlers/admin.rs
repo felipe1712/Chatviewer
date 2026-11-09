@@ -265,7 +265,7 @@ pub async fn get_active_crl(
     .unwrap_or_default();
 
     (StatusCode::OK, Json(json!({
-        "issuer": "ChatViewer Pro CRL Authority",
+        "issuer": "ChatProof Pro CRL Authority",
         "generated_at": Utc::now(),
         "revocations": revocations
     }))).into_response()
