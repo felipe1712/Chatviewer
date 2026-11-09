@@ -12,10 +12,10 @@ use uuid::Uuid;
 use crate::handlers::checkout::AppState;
 use crate::models::{CreateProductRequest, Product, UpdateProductRequest};
 
-fn check_auth(headers: &HeaderMap, admin_token: &str) -> bool {
+async fn check_auth(headers: &HeaderMap, state: &AppState) -> bool {
     if let Some(auth) = headers.get("authorization").and_then(|h| h.to_str().ok()) {
         if let Some(token) = auth.strip_prefix("Bearer ") {
-            return token.trim() == admin_token.trim();
+            return crate::auth::validate_token(&state.db, &state.config.admin_token, token).await.is_some();
         }
     }
     false
@@ -40,7 +40,7 @@ pub async fn admin_list_products(
     State(state): State<Arc<AppState>>,
     headers: HeaderMap,
 ) -> Response {
-    if !check_auth(&headers, &state.config.admin_token) {
+    if !check_auth(&headers, &state).await {
         return (StatusCode::UNAUTHORIZED, "Acceso no autorizado").into_response();
     }
 
@@ -84,7 +84,7 @@ pub async fn admin_create_product(
     headers: HeaderMap,
     Json(req): Json<CreateProductRequest>,
 ) -> Response {
-    if !check_auth(&headers, &state.config.admin_token) {
+    if !check_auth(&headers, &state).await {
         return (StatusCode::UNAUTHORIZED, "Acceso no autorizado").into_response();
     }
 
@@ -152,7 +152,7 @@ pub async fn admin_update_product(
     Path(id): Path<String>,
     Json(req): Json<UpdateProductRequest>,
 ) -> Response {
-    if !check_auth(&headers, &state.config.admin_token) {
+    if !check_auth(&headers, &state).await {
         return (StatusCode::UNAUTHORIZED, "Acceso no autorizado").into_response();
     }
 

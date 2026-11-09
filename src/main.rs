@@ -1,3 +1,4 @@
+mod auth;
 mod config;
 mod crypto;
 mod email;
@@ -65,20 +66,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         return Err(e.into());
     }
 
+    // 4. Inicializar / verificar superadministrador por defecto
+    auth::bootstrap_superadmin(&db, &config.admin_token).await;
+
     let state = Arc::new(AppState {
         db,
         config: Arc::clone(&config),
     });
 
-    // 4. Configurar CORS
+    // 5. Configurar CORS
     let cors = CorsLayer::new()
         .allow_origin(Any)
         .allow_methods(Any)
         .allow_headers(Any);
 
-    // 5. Configurar Enrutador Axum
+    // 6. Configurar Enrutador Axum
     let app = Router::new()
-        // --- SITIO PÚBLICO (LANDING PAGE & SEO) ---
+        // --- SITIO PÚBLICO & CAUSER HUB ---
         .route("/", get(handlers::landing::serve_hub))
         .route("/chatproof", get(handlers::landing::serve_landing))
         .route("/portal", get(handlers::landing::serve_portal))
@@ -108,6 +112,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/api/admin/products", get(handlers::products::admin_list_products).post(handlers::products::admin_create_product))
         .route("/api/admin/products/:id", axum::routing::put(handlers::products::admin_update_product))
 
+        // --- AUTENTICACIÓN Y GESTIÓN DE USUARIOS ---
+        .route("/api/admin/auth/login", post(handlers::users::login_handler))
+        .route("/api/admin/auth/me", get(handlers::users::me_handler))
+        .route("/api/admin/auth/change-password", post(handlers::users::change_password_handler))
+        .route("/api/admin/users", get(handlers::users::list_users_handler).post(handlers::users::create_user_handler))
+        .route("/api/admin/users/:id", axum::routing::put(handlers::users::update_user_handler).delete(handlers::users::delete_user_handler))
+
         .layer(cors)
         .layer(TraceLayer::new_for_http())
         .with_state(state);
@@ -116,7 +127,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!("============================================================");
     info!(" Causer Engine · Servidor Central (admin.causer.com.mx)");
     info!(" Escuchando en: http://{}", addr);
-    info!(" - Landing pública:     http://localhost:{}", config.port);
+    info!(" - Causer Hub:          http://localhost:{}", config.port);
     info!(" - Portal cliente:      http://localhost:{}/portal", config.port);
     info!(" - Panel administrador: http://localhost:{}/admin", config.port);
     info!("============================================================");

@@ -16,10 +16,10 @@ use crate::crypto::{LicensePayload, LicenseSigner, LicenseTier};
 use crate::handlers::checkout::AppState;
 use crate::models::{BatchGenerateRequest, CrlRevocation, RevokeLicenseRequest};
 
-fn check_auth(headers: &HeaderMap, admin_token: &str) -> bool {
+async fn check_auth(headers: &HeaderMap, state: &AppState) -> bool {
     if let Some(auth) = headers.get("authorization").and_then(|h| h.to_str().ok()) {
         if let Some(token) = auth.strip_prefix("Bearer ") {
-            return token.trim() == admin_token.trim();
+            return crate::auth::validate_token(&state.db, &state.config.admin_token, token).await.is_some();
         }
     }
     false
@@ -29,7 +29,7 @@ pub async fn admin_overview(
     State(state): State<Arc<AppState>>,
     headers: HeaderMap,
 ) -> Response {
-    if !check_auth(&headers, &state.config.admin_token) {
+    if !check_auth(&headers, &state).await {
         return (StatusCode::UNAUTHORIZED, "Acceso no autorizado").into_response();
     }
 
@@ -106,7 +106,7 @@ pub async fn batch_generate(
     headers: HeaderMap,
     Json(req): Json<BatchGenerateRequest>,
 ) -> Response {
-    if !check_auth(&headers, &state.config.admin_token) {
+    if !check_auth(&headers, &state).await {
         return (StatusCode::UNAUTHORIZED, "Acceso no autorizado").into_response();
     }
 
@@ -221,7 +221,7 @@ pub async fn revoke_license(
     headers: HeaderMap,
     Json(req): Json<RevokeLicenseRequest>,
 ) -> Response {
-    if !check_auth(&headers, &state.config.admin_token) {
+    if !check_auth(&headers, &state).await {
         return (StatusCode::UNAUTHORIZED, "Acceso no autorizado").into_response();
     }
 
