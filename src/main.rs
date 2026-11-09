@@ -8,13 +8,14 @@ use axum::{
     routing::{get, post},
     Router,
 };
-use sqlx::sqlite::SqlitePoolOptions;
+use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
 use std::fs;
 use std::net::SocketAddr;
+use std::str::FromStr;
 use std::sync::Arc;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::trace::TraceLayer;
-use tracing::info;
+use tracing::{error, info};
 
 use crate::config::Config;
 use crate::handlers::checkout::AppState;
@@ -34,18 +35,35 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Asegurar directorio data/
     let _ = fs::create_dir_all("data");
+    let _ = fs::create_dir_all("/app/data");
 
     // 3. Inicializar SQLite y ejecutar migraciones
     info!("Conectando a base de datos de licencias: {}", config.database_url);
-    let db = SqlitePoolOptions::new()
+    let connect_opts = match SqliteConnectOptions::from_str(&config.database_url) {
+        Ok(opts) => opts.create_if_missing(true),
+        Err(e) => {
+            error!("Error parseando DATABASE_URL ({}): {}", config.database_url, e);
+            return Err(e.into());
+        }
+    };
+
+    let db = match SqlitePoolOptions::new()
         .max_connections(10)
-        .connect(&config.database_url)
-        .await?;
+        .connect_with(connect_opts)
+        .await
+    {
+        Ok(p) => p,
+        Err(e) => {
+            error!("Error crítico conectando a SQLite en {}: {}", config.database_url, e);
+            return Err(e.into());
+        }
+    };
 
     info!("Ejecutando migraciones de esquema de licencias...");
-    sqlx::migrate!("./migrations")
-        .run(&db)
-        .await?;
+    if let Err(e) = sqlx::migrate!("./migrations").run(&db).await {
+        error!("Error ejecutando migraciones de base de datos: {}", e);
+        return Err(e.into());
+    }
 
     let state = Arc::new(AppState {
         db,
