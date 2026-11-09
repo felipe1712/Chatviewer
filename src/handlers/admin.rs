@@ -69,11 +69,15 @@ pub async fn admin_overview(
         r#"
         SELECT l.id, l.tier, l.seats, l.issued_at, l.expires_at, l.is_revoked,
                c.name as customer_name, c.email as customer_email,
-               (SELECT COUNT(*) FROM license_seats ls WHERE ls.license_id = l.id) as seats_assigned
+               (SELECT COUNT(*) FROM license_seats ls WHERE ls.license_id = l.id) as seats_assigned,
+               COALESCE(l.product_id, 'PROD-CHATPROOF-PRO') as product_id,
+               COALESCE(p.name, 'ChatProof Pro') as product_name,
+               COALESCE(p.slug, 'chatproof-pro') as product_slug
         FROM licenses l
         LEFT JOIN customers c ON l.customer_id = c.id
+        LEFT JOIN products p ON l.product_id = p.id
         ORDER BY l.created_at DESC
-        LIMIT 50
+        LIMIT 200
         "#
     )
     .fetch_all(&state.db)
@@ -90,6 +94,9 @@ pub async fn admin_overview(
         "customer_name": l.get::<Option<String>, _>("customer_name").unwrap_or_else(|| "Titular".to_string()),
         "customer_email": l.get::<Option<String>, _>("customer_email").unwrap_or_else(|| "email@peritaje.com".to_string()),
         "seats_assigned": l.get::<i64, _>("seats_assigned"),
+        "product_id": l.get::<String, _>("product_id"),
+        "product_name": l.get::<String, _>("product_name"),
+        "product_slug": l.get::<String, _>("product_slug"),
     })).collect::<Vec<_>>();
 
     (StatusCode::OK, Json(json!({
@@ -134,6 +141,25 @@ pub async fn batch_generate(
         Err(_) => customer_id,
     };
 
+    let prod_id: String = if let Some(slug) = &req.product_slug {
+        sqlx::query("SELECT id FROM products WHERE slug = ?1")
+            .bind(slug)
+            .fetch_optional(&state.db)
+            .await
+            .ok()
+            .flatten()
+            .map(|r| r.get::<String, _>("id"))
+            .unwrap_or_else(|| "PROD-CHATPROOF-PRO".to_string())
+    } else {
+        "PROD-CHATPROOF-PRO".to_string()
+    };
+
+    let prod_prefix = if prod_id.contains("CHATPROOF") {
+        "CP"
+    } else {
+        "GEN"
+    };
+
     let tier_enum = match req.tier.to_lowercase().as_str() {
         "laboratorio" => LicenseTier::Laboratorio,
         _ => LicenseTier::Peritaje,
@@ -148,7 +174,7 @@ pub async fn batch_generate(
         let mut csv_summary = String::from("License_ID,Customer,Tier,Seats,Issued_At,Expires_At,Signature\n");
 
         for i in 1..=req.quantity {
-            let lic_id = format!("LIC-BATCH-{}-{:04}", &Uuid::new_v4().to_string()[..8].to_uppercase(), i);
+            let lic_id = format!("LIC-{}-{}-{:04}", prod_prefix, &Uuid::new_v4().to_string()[..8].to_uppercase(), i);
             let payload = LicensePayload {
                 license_id: lic_id.clone(),
                 customer_name: req.customer_name.clone(),
@@ -170,8 +196,8 @@ pub async fn batch_generate(
 
             let _ = sqlx::query(
                 r#"
-                INSERT INTO licenses (id, order_id, customer_id, tier, seats, issued_at, expires_at, signature, is_revoked, created_at)
-                VALUES (?1, NULL, ?2, ?3, ?4, ?5, ?6, ?7, 0, ?8)
+                INSERT INTO licenses (id, order_id, customer_id, tier, seats, issued_at, expires_at, signature, is_revoked, created_at, product_id)
+                VALUES (?1, NULL, ?2, ?3, ?4, ?5, ?6, ?7, 0, ?8, ?9)
                 "#
             )
             .bind(&lic_id)
@@ -182,6 +208,7 @@ pub async fn batch_generate(
             .bind(expires_at)
             .bind(&signed.signature)
             .bind(now)
+            .bind(&prod_id)
             .execute(&state.db)
             .await;
 

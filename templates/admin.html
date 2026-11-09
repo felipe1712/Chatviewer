@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Causer Engine · Panel de Administración y Control Central</title>
+    <title>Causer Engine · Centro de Control y Licenciamiento Multi-Producto</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
@@ -12,13 +12,77 @@
             --bs-body-color: #cbd5e1;
             --causer-primary: #2563eb;
             --causer-accent: #38bdf8;
+            --causer-sidebar-bg: #0d121f;
+            --causer-card-bg: #111827;
             --causer-border: #1e293b;
+            --causer-hover: #1e293b;
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bs-body-bg); }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bs-body-bg);
+            overflow-x: hidden;
+        }
         .card-custom {
-            background-color: #111827;
+            background-color: var(--causer-card-bg);
             border: 1px solid var(--causer-border);
             border-radius: 0.75rem;
+        }
+        .sidebar {
+            width: 280px;
+            min-width: 280px;
+            background-color: var(--causer-sidebar-bg);
+            border-right: 1px solid var(--causer-border);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s ease;
+        }
+        .main-content {
+            flex: 1;
+            min-height: 100vh;
+            overflow-y: auto;
+            background-color: var(--bs-body-bg);
+        }
+        .nav-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.5rem;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+            margin-bottom: 2px;
+        }
+        .nav-item-btn:hover {
+            color: #f8fafc;
+            background-color: var(--causer-hover);
+        }
+        .nav-item-btn.active {
+            color: #ffffff;
+            background-color: rgba(37, 99, 235, 0.2);
+            border-color: rgba(56, 189, 248, 0.4);
+            font-weight: 600;
+        }
+        .nav-item-btn.active i {
+            color: var(--causer-accent) !important;
+        }
+        .product-nav-btn {
+            position: relative;
+        }
+        .product-nav-btn.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 15%;
+            bottom: 15%;
+            width: 3px;
+            background-color: var(--causer-accent);
+            border-radius: 0 2px 2px 0;
         }
         .code-pill {
             background: #1e293b;
@@ -27,248 +91,434 @@
             font-family: monospace;
             font-size: 0.8rem;
         }
+        .sidebar-section-title {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #64748b;
+            font-weight: 700;
+            padding: 0.75rem 0.75rem 0.35rem 0.75rem;
+        }
+        .badge-kpi {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-dark border-bottom sticky-top py-2" style="background: rgba(11, 15, 25, 0.95); border-color: var(--causer-border) !important;">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
-                <i class="bi bi-cpu-fill text-primary fs-4"></i>
-                <span>Causer Engine <span class="badge bg-primary ms-1" style="font-size: 0.7rem;">MULTI-SaaS</span></span>
-            </a>
-            <div class="d-flex align-items-center gap-3">
-                <div id="user-info-badge" class="d-none d-md-flex align-items-center gap-2">
-                    <span class="badge bg-info text-dark" id="current-user-role">Superadmin</span>
-                    <span class="small text-white fw-bold" id="current-user-name">admin@causer.com.mx</span>
-                </div>
-                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modal-change-password">
-                    <i class="bi bi-shield-lock me-1"></i> Cambiar Contraseña
-                </button>
-                <button class="btn btn-outline-danger btn-sm" onclick="logoutAdmin()">
-                    <i class="bi bi-box-arrow-right me-1"></i> Salir
-                </button>
-                <a href="/" class="btn btn-outline-secondary btn-sm"><i class="bi bi-house-door me-1"></i> Hub</a>
-            </div>
-        </div>
-    </nav>
+    <div class="d-flex min-vh-100">
 
-    <div class="container-fluid px-4 my-4">
-        <!-- KPIS -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-3">
-                <div class="card card-custom p-3">
-                    <div class="text-secondary small fw-bold">TOTAL LICENCIAS EMITIDAS</div>
-                    <h2 class="text-white fw-bold mb-0" id="kpi-total-licenses">0</h2>
-                </div>
+        <!-- ======================================================== -->
+        <!-- PANEL LATERAL IZQUIERDO (SIDEBAR PRODUCTOS Y SERVICIOS)  -->
+        <!-- ======================================================== -->
+        <aside class="sidebar p-3" id="main-sidebar">
+            <!-- BRAND / HEADER -->
+            <div class="d-flex align-items-center justify-content-between pb-3 mb-2 border-bottom border-secondary border-opacity-25">
+                <a href="/admin" class="d-flex align-items-center gap-2 text-decoration-none text-white">
+                    <div class="rounded-3 bg-primary bg-opacity-25 p-2 text-primary border border-primary border-opacity-50">
+                        <i class="bi bi-cpu-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold lh-1 text-white">Causer Engine</div>
+                        <span class="text-secondary" style="font-size: 0.68rem; letter-spacing: 0.05em;">PLATAFORMA CENTRAL</span>
+                    </div>
+                </a>
             </div>
-            <div class="col-md-3">
-                <div class="card card-custom p-3">
-                    <div class="text-secondary small fw-bold">PUESTOS FORENSES ACTIVOS</div>
-                    <h2 class="text-info fw-bold mb-0" id="kpi-total-seats">0</h2>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-custom p-3">
-                    <div class="text-secondary small fw-bold">INGRESOS PROCESADOS (ESTIMADO)</div>
-                    <h2 class="text-success fw-bold mb-0" id="kpi-revenue">$0 USD</h2>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-custom p-3">
-                    <div class="text-secondary small fw-bold">PRODUCTOS EN CATÁLOGO</div>
-                    <h2 class="text-warning fw-bold mb-0" id="kpi-total-products">1</h2>
-                </div>
-            </div>
-        </div>
 
-        <!-- SECCIÓN 1: CATÁLOGO MULTI-PRODUCTO -->
-        <div class="card card-custom p-4 mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <h5 class="text-white fw-bold mb-1 d-flex align-items-center gap-2">
-                        <i class="bi bi-grid-fill text-warning"></i> Catálogo de Productos y Aplicativos (Causer Engine)
-                    </h5>
-                    <p class="text-secondary small mb-0">
-                        Gobernanza central de aplicaciones y emisión de licencias independientes.
-                    </p>
-                </div>
-                <button class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#modal-new-product">
-                    <i class="bi bi-plus-circle me-1"></i> Registrar Nuevo Producto
+            <!-- NAVEGACIÓN GLOBAL -->
+            <div class="sidebar-section-title">Gobernanza</div>
+            <nav class="nav flex-column mb-3">
+                <a class="nav-item-btn active" id="btn-nav-global" onclick="switchView('global')">
+                    <i class="bi bi-speedometer2 text-info"></i>
+                    <span class="flex-grow-1">Visión General</span>
+                    <span class="badge bg-secondary badge-kpi" id="sb-kpi-licenses">0</span>
+                </a>
+                <a class="nav-item-btn" id="btn-nav-users" onclick="switchView('users')">
+                    <i class="bi bi-people-fill text-primary"></i>
+                    <span class="flex-grow-1">Usuarios y Roles</span>
+                    <span class="badge bg-info text-dark badge-kpi" id="sb-kpi-users">1</span>
+                </a>
+                <a class="nav-item-btn" id="btn-nav-crl" onclick="switchView('crl')">
+                    <i class="bi bi-shield-slash text-danger"></i>
+                    <span class="flex-grow-1">Revocaciones (CRL)</span>
+                </a>
+            </nav>
+
+            <!-- PRODUCTOS Y SERVICIOS REGISTRADOS -->
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="sidebar-section-title p-0 my-2">PRODUCTOS & SERVICIOS</div>
+                <button class="btn btn-sm btn-link text-primary p-0 text-decoration-none" title="Registrar Producto" data-bs-toggle="modal" data-bs-target="#modal-new-product">
+                    <i class="bi bi-plus-circle-fill fs-6"></i>
                 </button>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-dark table-hover table-sm align-middle mb-0">
-                    <thead>
-                        <tr class="text-muted small">
-                            <th>ID Producto</th>
-                            <th>Nombre Comercial</th>
-                            <th>Slug (API Identificador)</th>
-                            <th>Planes Habilitados</th>
-                            <th>Licencias Emitidas</th>
-                            <th>Estado</th>
-                            <th>Fecha Registro</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-products-body">
-                        <tr>
-                            <td colspan="7" class="text-center py-3 text-muted">Cargando catálogo de productos...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SECCIÓN 2: GESTIÓN DE USUARIOS Y ACCESOS (ADMIN & SUPERADMIN) -->
-        <div class="card card-custom p-4 mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <h5 class="text-white fw-bold mb-1 d-flex align-items-center gap-2">
-                        <i class="bi bi-people-fill text-info"></i> Usuarios Administradores de la Plataforma
-                    </h5>
-                    <p class="text-secondary small mb-0">
-                        Control de credenciales, roles y accesos al servidor central de licencias (Contraseñas con hash PBKDF2/SHA-256).
-                    </p>
+            <nav class="nav flex-column mb-auto overflow-y-auto" id="sidebar-products-list" style="max-height: 40vh;">
+                <!-- RENDERIZADO DINÁMICAMENTE POR JAVASCRIPT -->
+                <div class="text-center py-3 text-secondary small">
+                    <span class="spinner-border spinner-border-sm me-1"></span> Cargando catálogo...
                 </div>
-                <button class="btn btn-outline-info btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#modal-new-user">
-                    <i class="bi bi-person-plus-fill me-1"></i> Crear Usuario Administrador
-                </button>
+            </nav>
+
+            <button class="btn btn-outline-primary btn-sm w-100 mb-3 fw-bold py-2" data-bs-toggle="modal" data-bs-target="#modal-new-product">
+                <i class="bi bi-plus-lg me-1"></i> Registrar Producto
+            </button>
+
+            <!-- FOOTER DEL SIDEBAR: USUARIO ACTIVO Y ACCIONES -->
+            <div class="pt-3 border-top border-secondary border-opacity-25 mt-auto">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="overflow-hidden me-2">
+                        <div class="fw-bold text-white small text-truncate" id="sidebar-user-name">admin@causer.com.mx</div>
+                        <span class="badge bg-info text-dark" style="font-size: 0.65rem;" id="sidebar-user-role">SUPERADMIN</span>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary p-1" title="Cambiar Contraseña" data-bs-toggle="modal" data-bs-target="#modal-change-password">
+                        <i class="bi bi-key-fill text-warning"></i>
+                    </button>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/" class="btn btn-outline-secondary btn-sm flex-grow-1" title="Causer Hub Público">
+                        <i class="bi bi-house me-1"></i> Hub
+                    </a>
+                    <button class="btn btn-outline-danger btn-sm" onclick="logoutAdmin()" title="Cerrar Sesión">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </button>
+                </div>
             </div>
+        </aside>
 
-            <div class="table-responsive">
-                <table class="table table-dark table-hover table-sm align-middle mb-0">
-                    <thead>
-                        <tr class="text-muted small">
-                            <th>ID Usuario</th>
-                            <th>Nombre</th>
-                            <th>Correo Electrónico</th>
-                            <th>Rol</th>
-                            <th>Estado</th>
-                            <th>Última Conexión</th>
-                            <th>Fecha Alta</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-users-body">
-                        <tr>
-                            <td colspan="7" class="text-center py-3 text-muted">Cargando usuarios...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <!-- ======================================================== -->
+        <!-- ÁREA CENTRAL DE TRABAJO (MAIN CONTENT)                   -->
+        <!-- ======================================================== -->
+        <main class="main-content p-4">
 
-        <!-- ACCIONES PRINCIPALES: GENERADOR POR LOTES Y GESTOR CRL -->
-        <div class="row g-4 mb-4">
-            <!-- GENERADOR POR LOTES -->
-            <div class="col-lg-6">
-                <div class="card card-custom p-4 h-100">
-                    <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
-                        <i class="bi bi-boxes text-info"></i> Generador de Licencias por Lotes (Batch)
-                    </h5>
-                    <p class="text-secondary small mb-3">
-                        Emisión masiva de licencias para convenios judiciales, fiscalías o distribuidores mayoristas.
-                    </p>
-
-                    <div class="row g-2 mb-2">
-                        <div class="col-6">
-                            <label class="form-label small text-muted">Nombre de la Entidad / Cliente *</label>
-                            <input type="text" class="form-control form-control-sm" id="batch-name" placeholder="Fiscalía General de Justicia">
+            <!-- ---------------------------------------------------- -->
+            <!-- VISTA A: ADMINISTRADOR DE PRODUCTO SELECCIONADO      -->
+            <!-- ---------------------------------------------------- -->
+            <div id="view-product" class="d-none">
+                <!-- CABECERA DEL PRODUCTO -->
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-50 px-2 py-1" id="prod-detail-slug">chatproof-pro</span>
+                            <span class="badge bg-success text-dark" id="prod-detail-status">Activo</span>
                         </div>
-                        <div class="col-6">
-                            <label class="form-label small text-muted">Correo Electrónico de Contacto *</label>
-                            <input type="email" class="form-control form-control-sm" id="batch-email" placeholder="peritajes@fgj.gob">
+                        <h2 class="text-white fw-bold mb-1 d-flex align-items-center gap-2" id="prod-detail-name">
+                            ChatProof Pro
+                        </h2>
+                        <p class="text-secondary small mb-0" id="prod-detail-desc">
+                            Visor Forense y Conversor Oficial RSMF 2.0 y Reportes PDF Judiciales.
+                        </p>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-info btn-sm fw-bold text-dark px-3 py-2" onclick="scrollToIssuer()">
+                            <i class="bi bi-plus-circle me-1"></i> Emitir Licencia para este Producto
+                        </button>
+                        <a href="https://chatproof.pro" target="_blank" id="prod-detail-site-link" class="btn btn-outline-secondary btn-sm py-2">
+                            <i class="bi bi-box-arrow-up-right me-1"></i> Ver Sitio Web
+                        </a>
+                    </div>
+                </div>
+
+                <!-- KPIS ESPECÍFICOS DEL PRODUCTO -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card card-custom p-3">
+                            <div class="text-secondary small fw-bold">LICENCIAS DE ESTE PRODUCTO</div>
+                            <h2 class="text-white fw-bold mb-0" id="prod-kpi-licenses">0</h2>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="card card-custom p-3">
+                            <div class="text-secondary small fw-bold">PUESTOS FORENSES ASIGNADOS</div>
+                            <h2 class="text-info fw-bold mb-0" id="prod-kpi-seats">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-custom p-3">
+                            <div class="text-secondary small fw-bold">TIERS HABILITADOS</div>
+                            <div class="mt-2" id="prod-detail-tiers-badges">
+                                <span class="badge bg-secondary me-1">CASO</span>
+                                <span class="badge bg-secondary me-1">PERITAJE</span>
+                                <span class="badge bg-secondary me-1">LABORATORIO</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-custom p-3">
+                            <div class="text-secondary small fw-bold">REVOCACIONES / CRL</div>
+                            <h2 class="text-danger fw-bold mb-0" id="prod-kpi-revoked">0</h2>
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="row g-2 mb-3">
-                        <div class="col-4">
-                            <label class="form-label small text-muted">Producto</label>
-                            <select class="form-select form-select-sm" id="batch-product">
-                                <option value="chatproof-pro">ChatProof Pro</option>
+                <!-- EMISIÓN RÁPIDA DE LICENCIAS PARA ESTE PRODUCTO -->
+                <div class="card card-custom p-4 mb-4" id="section-product-issuer">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="text-white fw-bold mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-key-fill text-warning"></i> Emisión Inmediata de Licencias (<span id="issuer-product-label">ChatProof Pro</span>)
+                        </h5>
+                        <span class="badge bg-secondary font-monospace" id="issuer-prod-prefix">Prefijo: CP-</span>
+                    </div>
+                    <p class="text-secondary small mb-3">
+                        Genera paquetes periciales firmados criptográficamente para clientes de este aplicativo.
+                    </p>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label small text-muted">Nombre del Perito o Despacho *</label>
+                            <input type="text" class="form-control form-control-sm" id="prod-batch-name" placeholder="Lic. García / Fiscalía Especializada">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small text-muted">Correo Electrónico Oficial *</label>
+                            <input type="email" class="form-control form-control-sm" id="prod-batch-email" placeholder="contacto@despacho.com">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small text-muted">Tier / Plan</label>
+                            <select class="form-select form-select-sm" id="prod-batch-tier">
+                                <option value="caso">Por Caso (1 puesto)</option>
+                                <option value="peritaje" selected>Peritaje (1 puesto)</option>
+                                <option value="laboratorio">Laboratorio (5 puestos)</option>
                             </select>
                         </div>
-                        <div class="col-3">
-                            <label class="form-label small text-muted">Tier / Nivel</label>
-                            <select class="form-select form-select-sm" id="batch-tier">
-                                <option value="caso">Por Caso (1 Puesto)</option>
-                                <option value="peritaje" selected>Peritaje (1 Puesto)</option>
-                                <option value="laboratorio">Laboratorio (5 Puestos)</option>
-                            </select>
-                        </div>
-                        <div class="col-2">
+                        <div class="col-md-1">
                             <label class="form-label small text-muted">Cantidad</label>
-                            <input type="number" class="form-control form-control-sm" id="batch-qty" value="5" min="1" max="100">
+                            <input type="number" class="form-control form-control-sm" id="prod-batch-qty" value="1" min="1" max="100">
                         </div>
-                        <div class="col-3">
-                            <label class="form-label small text-muted">Vigencia (Días)</label>
-                            <input type="number" class="form-control form-control-sm" id="batch-days" value="365">
+                        <div class="col-md-1">
+                            <label class="form-label small text-muted">Días</label>
+                            <input type="number" class="form-control form-control-sm" id="prod-batch-days" value="365">
                         </div>
                     </div>
 
-                    <div id="batch-alert" class="alert alert-info py-2 small d-none"></div>
+                    <div id="prod-batch-alert" class="alert alert-info py-2 small d-none"></div>
 
-                    <button class="btn btn-info btn-sm fw-bold text-dark w-100" onclick="submitBatchGenerate()">
-                        <i class="bi bi-file-earmark-zip me-1"></i> Generar y Descargar Paquete ZIP
-                    </button>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary btn-sm fw-bold px-4 py-2" onclick="submitProductBatchGenerate()">
+                            <i class="bi bi-file-earmark-arrow-down-fill me-1"></i> Generar Licencia(s) y Descargar ZIP (.lic)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TABLA DE LICENCIAS EMITIDAS DE ESTE PRODUCTO -->
+                <div class="card card-custom p-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                        <h5 class="text-white fw-bold mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-list-check text-info"></i> Licencias Emitidas de este Producto
+                        </h5>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="text" class="form-control form-control-sm" id="prod-search-input" placeholder="Buscar por ID, cliente, email..." onkeyup="filterProductLicenses()" style="width: 260px;">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover table-sm align-middle">
+                            <thead>
+                                <tr class="text-muted small">
+                                    <th>ID Licencia</th>
+                                    <th>Cliente / Empresa</th>
+                                    <th>Tier</th>
+                                    <th>Puestos</th>
+                                    <th>Estado</th>
+                                    <th>Emitida</th>
+                                    <th>Vencimiento</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-product-licenses-body">
+                                <tr>
+                                    <td colspan="8" class="text-center py-4 text-muted">Cargando licencias...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- GESTOR DE REVOCACIONES Y LISTA NEGRA (CRL) -->
-            <div class="col-lg-6">
-                <div class="card card-custom p-4 h-100">
-                    <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
-                        <i class="bi bi-slash-circle-fill text-danger"></i> Gestor de Revocación y Lista Negra (CRL)
+            <!-- ---------------------------------------------------- -->
+            <!-- VISTA B: VISIÓN GLOBAL (DASHBOARD EMPRESA)           -->
+            <!-- ---------------------------------------------------- -->
+            <div id="view-global">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+                    <div>
+                        <h2 class="text-white fw-bold mb-1">Visión General · Causer Engine</h2>
+                        <p class="text-secondary small mb-0">Consolidado general de aplicativos, licencias y métricas de Causer Consulting.</p>
+                    </div>
+                    <button class="btn btn-primary btn-sm fw-bold px-3 py-2" data-bs-toggle="modal" data-bs-target="#modal-new-product">
+                        <i class="bi bi-plus-lg me-1"></i> Registrar Producto
+                    </button>
+                </div>
+
+                <!-- KPIS GLOBALES -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card card-custom p-3">
+                            <div class="text-secondary small fw-bold">TOTAL LICENCIAS GLOBALES</div>
+                            <h2 class="text-white fw-bold mb-0" id="kpi-total-licenses">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-custom p-3">
+                            <div class="text-secondary small fw-bold">PUESTOS FORENSES ACTIVOS</div>
+                            <h2 class="text-info fw-bold mb-0" id="kpi-total-seats">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-custom p-3">
+                            <div class="text-secondary small fw-bold">INGRESOS PROCESADOS (ESTIMADO)</div>
+                            <h2 class="text-success fw-bold mb-0" id="kpi-revenue">$0 USD</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-custom p-3">
+                            <div class="text-secondary small fw-bold">PRODUCTOS EN CATÁLOGO</div>
+                            <h2 class="text-warning fw-bold mb-0" id="kpi-total-products">1</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESUMEN DE PRODUCTOS REGISTRADOS -->
+                <div class="card card-custom p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="text-white fw-bold mb-0">
+                            <i class="bi bi-grid-fill text-warning me-2"></i> Portafolio de Productos y Servicios
+                        </h5>
+                        <span class="text-secondary small">Haz clic en "Administrar" para abrir el panel exclusivo de cada aplicativo</span>
+                    </div>
+
+                    <div class="row g-3" id="global-products-cards">
+                        <!-- RENDERIZADO POR JS -->
+                    </div>
+                </div>
+
+                <!-- AUDITORÍA GLOBAL DE TODAS LAS LICENCIAS -->
+                <div class="card card-custom p-4">
+                    <h5 class="text-white fw-bold mb-3">
+                        <i class="bi bi-clock-history text-info me-2"></i> Registro Consolidado de Licencias Emitidas
                     </h5>
-                    <p class="text-secondary small mb-3">
-                        Revoca licencias por fraude, contracargos o sustitución de hardware no autorizada.
-                    </p>
-
-                    <div class="mb-2">
-                        <label class="form-label small text-muted">ID de Licencia a Revocar *</label>
-                        <input type="text" class="form-control form-control-sm" id="revoke-id" placeholder="Ej. LIC-PER-2026-ABC12345">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover table-sm align-middle">
+                            <thead>
+                                <tr class="text-muted small">
+                                    <th>ID Licencia</th>
+                                    <th>Producto</th>
+                                    <th>Cliente</th>
+                                    <th>Tier</th>
+                                    <th>Puestos</th>
+                                    <th>Estado</th>
+                                    <th>Vencimiento</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-global-licenses-body">
+                                <tr><td colspan="8" class="text-center py-4 text-muted">Cargando licencias globales...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label small text-muted">Motivo de Revocación *</label>
-                        <input type="text" class="form-control form-control-sm" id="revoke-reason" placeholder="Contracargo bancario / Reemplazo de estación">
-                    </div>
-
-                    <div id="revoke-alert" class="alert alert-danger py-2 small d-none"></div>
-
-                    <button class="btn btn-outline-danger btn-sm fw-bold w-100" onclick="submitRevocation()">
-                        <i class="bi bi-shield-x me-1"></i> Revocar y Agregar a Lista Negra Inmutable
-                    </button>
                 </div>
             </div>
-        </div>
 
-        <!-- TABLA DE LICENCIAS Y LOGS -->
-        <div class="card card-custom p-4">
-            <h5 class="text-white fw-bold mb-3">Registro de Licencias y Auditoría de Emisiones</h5>
-            <div class="table-responsive">
-                <table class="table table-dark table-hover table-sm align-middle">
-                    <thead>
-                        <tr class="text-muted small">
-                            <th>ID Licencia</th>
-                            <th>Cliente / Empresa</th>
-                            <th>Tier</th>
-                            <th>Puestos Asignados</th>
-                            <th>Estado</th>
-                            <th>Emitida</th>
-                            <th>Vencimiento</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-licenses-body">
-                        <tr>
-                            <td colspan="8" class="text-center py-4 text-muted">Cargando registros...</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- ---------------------------------------------------- -->
+            <!-- VISTA C: GESTIÓN DE USUARIOS Y SUPERADMINISTRADOR    -->
+            <!-- ---------------------------------------------------- -->
+            <div id="view-users" class="d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+                    <div>
+                        <h2 class="text-white fw-bold mb-1">Gestión de Usuarios y Accesos</h2>
+                        <p class="text-secondary small mb-0">Administración de credenciales, roles y permisos en Causer Engine.</p>
+                    </div>
+                    <button class="btn btn-info btn-sm fw-bold text-dark px-3 py-2" data-bs-toggle="modal" data-bs-target="#modal-new-user">
+                        <i class="bi bi-person-plus-fill me-1"></i> Registrar Nuevo Usuario
+                    </button>
+                </div>
+
+                <div class="card card-custom p-4">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover table-sm align-middle">
+                            <thead>
+                                <tr class="text-muted small">
+                                    <th>ID Usuario</th>
+                                    <th>Nombre Completo</th>
+                                    <th>Correo Electrónico</th>
+                                    <th>Rol</th>
+                                    <th>Estado</th>
+                                    <th>Último Acceso</th>
+                                    <th>Creado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-users-body">
+                                <tr><td colspan="8" class="text-center py-3 text-muted">Cargando usuarios...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
+
+            <!-- ---------------------------------------------------- -->
+            <!-- VISTA D: GESTOR DE REVOCACIONES Y LISTA NEGRA (CRL) -->
+            <!-- ---------------------------------------------------- -->
+            <div id="view-crl" class="d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+                    <div>
+                        <h2 class="text-white fw-bold mb-1">Revocación y Lista Negra Inmutable (CRL)</h2>
+                        <p class="text-secondary small mb-0">Gestión de invalidación de licencias por sustitución o incidencias de seguridad.</p>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-5">
+                        <div class="card card-custom p-4">
+                            <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                                <i class="bi bi-slash-circle-fill text-danger"></i> Revocar Licencia
+                            </h5>
+                            <p class="text-secondary small mb-3">
+                                Al revocar una licencia, queda agregada de inmediato a la lista CRL que sincronizan todos los clientes.
+                            </p>
+
+                            <div class="mb-3">
+                                <label class="form-label small text-muted">ID de Licencia a Revocar *</label>
+                                <input type="text" class="form-control form-control-sm" id="crl-revoke-id" placeholder="Ej. LIC-CP-2026-ABC12345">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small text-muted">Motivo de Revocación *</label>
+                                <input type="text" class="form-control form-control-sm" id="crl-revoke-reason" placeholder="Contracargo bancario / Reemplazo de hardware">
+                            </div>
+
+                            <div id="crl-alert" class="alert alert-danger py-2 small d-none"></div>
+
+                            <button class="btn btn-outline-danger btn-sm fw-bold w-100 py-2" onclick="submitCrlRevocation()">
+                                <i class="bi bi-shield-x me-1"></i> Revocar y Bloquear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7">
+                        <div class="card card-custom p-4">
+                            <h5 class="text-white fw-bold mb-3">
+                                <i class="bi bi-shield-lock text-success me-2"></i> Endpoint Oficial CRL (Sincronización Cliente)
+                            </h5>
+                            <p class="text-secondary small">
+                                Tus aplicaciones cliente (como ChatProof Pro en modo conectado) consultan este endpoint para descargar el listado de hashes revocados:
+                            </p>
+                            <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 mb-3 font-monospace small text-info">
+                                GET https://admin.causer.com.mx/api/crl/active
+                            </div>
+                            <div class="text-secondary small">
+                                <i class="bi bi-info-circle text-primary me-1"></i>
+                                Para auditorías de peritos en entornos desconectados (Air-Gapped), la lista se entrega en archivo firmado descargable.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
     </div>
+
+    <!-- ======================================================== -->
+    <!-- MODALES                                                  -->
+    <!-- ======================================================== -->
 
     <!-- MODAL INICIAR SESIÓN -->
     <div class="modal fade" id="modal-login" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
@@ -396,15 +646,15 @@
                 <div class="modal-body p-4">
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted">Nombre Comercial del Producto *</label>
-                        <input type="text" class="form-control form-control-sm" id="new-prod-name" placeholder="Ej. Causer Mobile Extractor" required>
+                        <input type="text" class="form-control form-control-sm" id="new-prod-name" placeholder="Ej. Causer AudioProof Forense" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted">Slug Identificador (URL / API) *</label>
-                        <input type="text" class="form-control form-control-sm" id="new-prod-slug" placeholder="mobile-extractor" required>
+                        <input type="text" class="form-control form-control-sm" id="new-prod-slug" placeholder="audioproof-forense" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted">Descripción del Producto</label>
-                        <textarea class="form-control form-control-sm" id="new-prod-desc" rows="2" placeholder="Herramienta pericial para análisis móvil..."></textarea>
+                        <textarea class="form-control form-control-sm" id="new-prod-desc" rows="2" placeholder="Análisis espectrográfico e identificación pericial de voz..."></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted">Planes / Tiers Permitidos</label>
@@ -437,6 +687,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let adminToken = localStorage.getItem('causer_admin_token') || localStorage.getItem('chatproof_admin_token') || '';
+        let globalProducts = [];
+        let globalLicenses = [];
+        let currentSelectedProduct = null;
 
         function getAuthHeader() {
             return { 'Authorization': `Bearer ${adminToken}` };
@@ -452,8 +705,11 @@
                 const res = await fetch('/api/admin/auth/me', { headers: getAuthHeader() });
                 if (res.ok) {
                     const data = await res.json();
-                    document.getElementById('current-user-role').textContent = (data.user.role || 'Admin').toUpperCase();
-                    document.getElementById('current-user-name').textContent = data.user.email || data.user.name;
+                    const role = (data.user.role || 'Admin').toUpperCase();
+                    const email = data.user.email || data.user.name;
+
+                    document.getElementById('sidebar-user-role').textContent = role;
+                    document.getElementById('sidebar-user-name').textContent = email;
                     loadDashboardData();
                 } else {
                     showLoginModal();
@@ -498,6 +754,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
+
                 const data = await res.json();
                 if (res.ok && data.token) {
                     adminToken = data.token;
@@ -505,7 +762,7 @@
                     bootstrap.Modal.getInstance(document.getElementById('modal-login'))?.hide();
                     initAuth();
                 } else {
-                    alertBox.textContent = data.message || 'Credenciales incorrectas.';
+                    alertBox.textContent = data.message || 'Credenciales inválidas.';
                     alertBox.classList.remove('d-none');
                 }
             } catch (err) {
@@ -517,162 +774,344 @@
         function logoutAdmin() {
             localStorage.removeItem('causer_admin_token');
             localStorage.removeItem('chatproof_admin_token');
-            adminToken = '';
-            location.reload();
+            window.location.reload();
         }
 
-        async function submitChangePassword() {
-            const current_password = document.getElementById('pwd-current').value;
-            const new_password = document.getElementById('pwd-new').value;
-            const confirm_pwd = document.getElementById('pwd-confirm').value;
-            const alertBox = document.getElementById('pwd-alert');
+        // ==========================================
+        // VISTAS Y NAVEGACIÓN
+        // ==========================================
 
-            alertBox.classList.add('d-none');
-            if (!current_password || !new_password) {
-                alertBox.textContent = 'Completa todos los campos.';
-                alertBox.classList.remove('d-none');
-                return;
-            }
-            if (new_password !== confirm_pwd) {
-                alertBox.textContent = 'La nueva contraseña y la confirmación no coinciden.';
-                alertBox.classList.remove('d-none');
-                return;
-            }
-            if (new_password.length < 8) {
-                alertBox.textContent = 'La nueva contraseña debe tener mínimo 8 caracteres.';
-                alertBox.classList.remove('d-none');
-                return;
-            }
+        function switchView(viewName) {
+            document.getElementById('view-global').classList.add('d-none');
+            document.getElementById('view-product').classList.add('d-none');
+            document.getElementById('view-users').classList.add('d-none');
+            document.getElementById('view-crl').classList.add('d-none');
 
-            try {
-                const res = await fetch('/api/admin/auth/change-password', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...getAuthHeader()
-                    },
-                    body: JSON.stringify({ current_password, new_password })
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    alert('¡Contraseña actualizada con éxito en la base de datos!');
-                    bootstrap.Modal.getInstance(document.getElementById('modal-change-password'))?.hide();
-                    document.getElementById('pwd-current').value = '';
-                    document.getElementById('pwd-new').value = '';
-                    document.getElementById('pwd-confirm').value = '';
-                } else {
-                    alertBox.textContent = data.message || 'Error al cambiar contraseña.';
-                    alertBox.classList.remove('d-none');
-                }
-            } catch (err) {
-                alertBox.textContent = `Error: ${err.message}`;
-                alertBox.classList.remove('d-none');
+            document.getElementById('btn-nav-global').classList.remove('active');
+            document.getElementById('btn-nav-users').classList.remove('active');
+            document.getElementById('btn-nav-crl').classList.remove('active');
+
+            // Quitar active de productos en sidebar
+            document.querySelectorAll('.product-nav-btn').forEach(b => b.classList.remove('active'));
+
+            if (viewName === 'global') {
+                document.getElementById('view-global').classList.remove('d-none');
+                document.getElementById('btn-nav-global').classList.add('active');
+            } else if (viewName === 'users') {
+                document.getElementById('view-users').classList.remove('d-none');
+                document.getElementById('btn-nav-users').classList.add('active');
+                loadUsersData();
+            } else if (viewName === 'crl') {
+                document.getElementById('view-crl').classList.remove('d-none');
+                document.getElementById('btn-nav-crl').classList.add('active');
             }
         }
 
-        async function loadUsersData() {
-            try {
-                const res = await fetch('/api/admin/users', { headers: getAuthHeader() });
-                if (res.ok) {
-                    const data = await res.json();
-                    const users = data.users || [];
-                    const tbody = document.getElementById('table-users-body');
-                    if (users.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-3 text-muted">No hay usuarios registrados</td></tr>`;
-                        return;
-                    }
-                    tbody.innerHTML = users.map(u => `
-                        <tr>
-                            <td class="font-monospace text-info small">${u.id}</td>
-                            <td class="fw-bold text-white">${u.name}</td>
-                            <td>${u.email}</td>
-                            <td><span class="badge ${u.role === 'superadmin' ? 'bg-danger' : 'bg-primary'}">${u.role.toUpperCase()}</span></td>
-                            <td>${u.is_active ? '<span class="badge bg-success text-dark">Activo</span>' : '<span class="badge bg-secondary">Inactivo</span>'}</td>
-                            <td class="small text-muted">${u.last_login_at ? new Date(u.last_login_at).toLocaleString() : 'Nunca'}</td>
-                            <td class="small text-muted">${new Date(u.created_at).toLocaleDateString()}</td>
-                        </tr>
-                    `).join('');
-                }
-            } catch (err) {
-                console.error("Error cargando usuarios:", err);
-            }
+        function selectProduct(productSlug) {
+            const product = globalProducts.find(p => p.slug === productSlug || p.id === productSlug);
+            if (!product) return;
+
+            currentSelectedProduct = product;
+
+            // Ocultar otras vistas
+            document.getElementById('view-global').classList.add('d-none');
+            document.getElementById('view-users').classList.add('d-none');
+            document.getElementById('view-crl').classList.add('d-none');
+            document.getElementById('btn-nav-global').classList.remove('active');
+            document.getElementById('btn-nav-users').classList.remove('active');
+            document.getElementById('btn-nav-crl').classList.remove('active');
+
+            // Activar botón en sidebar
+            document.querySelectorAll('.product-nav-btn').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-slug') === product.slug);
+            });
+
+            // Mostrar vista de producto
+            document.getElementById('view-product').classList.remove('d-none');
+
+            // Renderizar datos del producto en el Administrador Central
+            document.getElementById('prod-detail-name').textContent = product.name;
+            document.getElementById('prod-detail-slug').textContent = product.slug;
+            document.getElementById('prod-detail-desc').textContent = product.description || 'Sin descripción';
+            document.getElementById('prod-detail-status').textContent = product.is_active ? 'Activo' : 'Inactivo';
+            document.getElementById('prod-detail-status').className = product.is_active ? 'badge bg-success text-dark' : 'badge bg-danger';
+
+            document.getElementById('issuer-product-label').textContent = product.name;
+            const prefix = product.slug.includes('chatproof') ? 'CP-' : (product.slug.substring(0, 3).toUpperCase() + '-');
+            document.getElementById('issuer-prod-prefix').textContent = `Prefijo: ${prefix}`;
+
+            // Tiers
+            const tiers = product.allowed_tiers || ['caso', 'peritaje', 'laboratorio'];
+            document.getElementById('prod-detail-tiers-badges').innerHTML = tiers.map(t => 
+                `<span class="badge bg-secondary me-1 font-monospace">${t.toUpperCase()}</span>`
+            ).join('');
+
+            // Select de tiers en emisión
+            const tierSelect = document.getElementById('prod-batch-tier');
+            tierSelect.innerHTML = tiers.map(t => {
+                const label = t === 'laboratorio' ? 'Laboratorio (5 puestos)' : (t === 'caso' ? 'Por Caso (1 puesto)' : 'Peritaje (1 puesto)');
+                return `<option value="${t}">${label}</option>`;
+            }).join('');
+
+            // Filtrar licencias de este producto
+            renderProductLicensesTable(product);
+
+            // Scroll suave arriba
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        async function submitCreateUser() {
-            const name = document.getElementById('user-new-name').value.trim();
-            const email = document.getElementById('user-new-email').value.trim();
-            const password = document.getElementById('user-new-pwd').value;
-            const role = document.getElementById('user-new-role').value;
-            const alertBox = document.getElementById('new-user-alert');
-
-            alertBox.classList.add('d-none');
-            if (!name || !email || !password) {
-                alertBox.textContent = 'Completa todos los campos.';
-                alertBox.classList.remove('d-none');
-                return;
-            }
-
-            try {
-                const res = await fetch('/api/admin/users', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...getAuthHeader()
-                    },
-                    body: JSON.stringify({ name, email, password, role })
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    bootstrap.Modal.getInstance(document.getElementById('modal-new-user'))?.hide();
-                    document.getElementById('user-new-name').value = '';
-                    document.getElementById('user-new-email').value = '';
-                    document.getElementById('user-new-pwd').value = '';
-                    alert('Usuario creado con éxito.');
-                    loadUsersData();
-                } else {
-                    alertBox.textContent = data.message || 'Error al crear usuario.';
-                    alertBox.classList.remove('d-none');
-                }
-            } catch (err) {
-                alertBox.textContent = `Error: ${err.message}`;
-                alertBox.classList.remove('d-none');
-            }
+        function scrollToIssuer() {
+            document.getElementById('section-product-issuer').scrollIntoView({ behavior: 'smooth' });
         }
+
+        // ==========================================
+        // CARGA DE DATOS (API)
+        // ==========================================
 
         async function loadProductsData() {
             try {
                 const res = await fetch('/api/admin/products', { headers: getAuthHeader() });
                 if (res.ok) {
                     const data = await res.json();
-                    const products = data.products || [];
-                    document.getElementById('kpi-total-products').textContent = products.length;
+                    globalProducts = data.products || [];
 
-                    const tbody = document.getElementById('table-products-body');
-                    const select = document.getElementById('batch-product');
+                    document.getElementById('kpi-total-products').textContent = globalProducts.length;
 
-                    if (products.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-3 text-muted">No hay productos registrados</td></tr>`;
-                        return;
+                    // 1. Renderizar Sidebar de Productos
+                    const sidebarList = document.getElementById('sidebar-products-list');
+                    if (globalProducts.length === 0) {
+                        sidebarList.innerHTML = `<div class="text-secondary small py-2 px-3">No hay productos</div>`;
+                    } else {
+                        sidebarList.innerHTML = globalProducts.map(p => {
+                            const icon = p.slug.includes('chatproof') ? 'bi-shield-check' : 'bi-box-seam';
+                            return `
+                                <a class="nav-item-btn product-nav-btn ${currentSelectedProduct && currentSelectedProduct.slug === p.slug ? 'active' : ''}" 
+                                   data-slug="${p.slug}" 
+                                   onclick="selectProduct('${p.slug}')">
+                                    <i class="bi ${icon} text-warning"></i>
+                                    <span class="flex-grow-1 text-truncate">${p.name}</span>
+                                    <span class="badge bg-secondary badge-kpi">${p.licenses_count}</span>
+                                </a>
+                            `;
+                        }).join('');
                     }
 
-                    tbody.innerHTML = products.map(p => `
-                        <tr>
-                            <td class="font-monospace text-warning small">${p.id}</td>
-                            <td class="fw-bold text-white">${p.name} <br><span class="text-muted small">${p.description || ''}</span></td>
-                            <td><span class="code-pill text-info">${p.slug}</span></td>
-                            <td>${(p.allowed_tiers || []).map(t => `<span class="badge bg-secondary me-1" style="font-size: 0.65rem;">${t.toUpperCase()}</span>`).join('')}</td>
-                            <td><span class="badge bg-info text-dark">${p.licenses_count}</span></td>
-                            <td>${p.is_active ? '<span class="badge bg-success text-dark">Activo</span>' : '<span class="badge bg-danger">Inactivo</span>'}</td>
-                            <td class="small text-muted">${new Date(p.created_at).toLocaleDateString()}</td>
-                        </tr>
-                    `).join('');
-
-                    select.innerHTML = products.map(p => `<option value="${p.slug}">${p.name} (${p.slug})</option>`).join('');
+                    // 2. Renderizar Tarjetas de Productos en Visión Global
+                    const cardsContainer = document.getElementById('global-products-cards');
+                    cardsContainer.innerHTML = globalProducts.map(p => {
+                        const icon = p.slug.includes('chatproof') ? 'bi-shield-check' : 'bi-box-seam';
+                        return `
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card card-custom p-3 h-100 d-flex flex-column justify-content-between border-opacity-50">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div class="rounded bg-warning bg-opacity-10 text-warning p-2">
+                                                <i class="bi ${icon} fs-4"></i>
+                                            </div>
+                                            <span class="badge ${p.is_active ? 'bg-success text-dark' : 'bg-danger'}">${p.is_active ? 'Activo' : 'Inactivo'}</span>
+                                        </div>
+                                        <h5 class="text-white fw-bold mb-1">${p.name}</h5>
+                                        <p class="text-secondary small mb-3 text-truncate" title="${p.description || ''}">${p.description || 'Sin descripción'}</p>
+                                    </div>
+                                    <div class="pt-2 border-top border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="text-muted small">Licencias:</span>
+                                            <span class="badge bg-info text-dark fw-bold ms-1">${p.licenses_count}</span>
+                                        </div>
+                                        <button class="btn btn-outline-primary btn-sm fw-bold" onclick="selectProduct('${p.slug}')">
+                                            Administrar <i class="bi bi-chevron-right ms-1"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
                 }
             } catch (err) {
                 console.error("Error cargando productos:", err);
             }
         }
+
+        async function loadAdminData() {
+            try {
+                const res = await fetch('/api/admin/overview', { headers: getAuthHeader() });
+                if (res.ok) {
+                    const data = await res.json();
+                    globalLicenses = data.licenses || [];
+
+                    document.getElementById('kpi-total-licenses').textContent = data.total_licenses || 0;
+                    document.getElementById('kpi-total-seats').textContent = data.total_seats || 0;
+                    document.getElementById('kpi-revenue').textContent = `$${(data.revenue_cents || 0) / 100} USD`;
+                    document.getElementById('sb-kpi-licenses').textContent = data.total_licenses || 0;
+
+                    // Renderizar tabla global
+                    const tbody = document.getElementById('table-global-licenses-body');
+                    if (globalLicenses.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-4 text-muted">No hay licencias registradas</td></tr>`;
+                    } else {
+                        tbody.innerHTML = globalLicenses.map(l => `
+                            <tr>
+                                <td class="font-monospace text-info small">${l.id}</td>
+                                <td><span class="badge bg-secondary">${l.product_name || 'ChatProof Pro'}</span></td>
+                                <td>${l.customer_name} <br><span class="text-muted small">${l.customer_email}</span></td>
+                                <td><span class="badge ${l.tier === 'laboratorio' ? 'bg-primary' : (l.tier === 'caso' ? 'bg-secondary' : 'bg-info text-dark')}">${l.tier.toUpperCase()}</span></td>
+                                <td>${l.seats_assigned} / ${l.seats}</td>
+                                <td>${l.is_revoked ? '<span class="badge bg-danger">Revocada</span>' : '<span class="badge bg-success text-dark">Activa</span>'}</td>
+                                <td class="small text-muted">${l.expires_at ? new Date(l.expires_at).toLocaleDateString() : 'Perpetua'}</td>
+                                <td>
+                                    <a href="/api/portal/license/${l.id}/download" class="btn btn-outline-light btn-sm py-0 px-2" title="Descargar .lic">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `).join('');
+                    }
+
+                    // Si ya hay un producto seleccionado, actualizar su tabla
+                    if (currentSelectedProduct) {
+                        renderProductLicensesTable(currentSelectedProduct);
+                    }
+                }
+            } catch (err) {
+                console.error("Error cargando overview:", err);
+            }
+        }
+
+        function renderProductLicensesTable(product) {
+            const tbody = document.getElementById('table-product-licenses-body');
+            const search = (document.getElementById('prod-search-input').value || '').trim().toLowerCase();
+
+            // Filtrar licencias que pertenecen a este producto
+            const prodLicenses = globalLicenses.filter(l => {
+                const matchProduct = (l.product_id === product.id) || 
+                                     (l.product_slug === product.slug) || 
+                                     (product.slug.includes('chatproof') && (!l.product_id || l.product_id.includes('CHATPROOF') || l.id.includes('-CP-')));
+                
+                if (!matchProduct) return false;
+
+                if (!search) return true;
+                return l.id.toLowerCase().includes(search) ||
+                       (l.customer_name && l.customer_name.toLowerCase().includes(search)) ||
+                       (l.customer_email && l.customer_email.toLowerCase().includes(search));
+            });
+
+            // Actualizar KPIs del producto
+            document.getElementById('prod-kpi-licenses').textContent = prodLicenses.length;
+            const totalSeats = prodLicenses.reduce((acc, l) => acc + (l.seats || 1), 0);
+            const revokedCount = prodLicenses.filter(l => l.is_revoked).length;
+            document.getElementById('prod-kpi-seats').textContent = totalSeats;
+            document.getElementById('prod-kpi-revoked').textContent = revokedCount;
+
+            if (prodLicenses.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-4 text-muted">No se encontraron licencias para este producto.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = prodLicenses.map(l => `
+                <tr>
+                    <td class="font-monospace text-info small fw-bold">${l.id}</td>
+                    <td>${l.customer_name} <br><span class="text-muted small">${l.customer_email}</span></td>
+                    <td><span class="badge ${l.tier === 'laboratorio' ? 'bg-primary' : (l.tier === 'caso' ? 'bg-secondary' : 'bg-info text-dark')}">${l.tier.toUpperCase()}</span></td>
+                    <td>${l.seats_assigned} / ${l.seats}</td>
+                    <td>${l.is_revoked ? '<span class="badge bg-danger">Revocada</span>' : '<span class="badge bg-success text-dark">Activa</span>'}</td>
+                    <td class="small text-muted">${new Date(l.issued_at).toLocaleDateString()}</td>
+                    <td class="small text-muted">${l.expires_at ? new Date(l.expires_at).toLocaleDateString() : 'Perpetua'}</td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <a href="/api/portal/license/${l.id}/download" class="btn btn-outline-light py-0 px-2" title="Descargar archivo de licencia .lic">
+                                <i class="bi bi-download"></i>
+                            </a>
+                            ${!l.is_revoked ? `
+                                <button class="btn btn-outline-danger py-0 px-2" onclick="quickRevokeLicense('${l.id}')" title="Revocar licencia">
+                                    <i class="bi bi-slash-circle"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterProductLicenses() {
+            if (currentSelectedProduct) {
+                renderProductLicensesTable(currentSelectedProduct);
+            }
+        }
+
+        // ==========================================
+        // EMISIÓN DE LICENCIA PARA EL PRODUCTO SELECCIONADO
+        // ==========================================
+
+        async function submitProductBatchGenerate() {
+            if (!currentSelectedProduct) {
+                alert("Selecciona un producto primero.");
+                return;
+            }
+
+            const name = document.getElementById('prod-batch-name').value.trim();
+            const email = document.getElementById('prod-batch-email').value.trim();
+            const tier = document.getElementById('prod-batch-tier').value;
+            const qty = parseInt(document.getElementById('prod-batch-qty').value, 10);
+            const days = parseInt(document.getElementById('prod-batch-days').value, 10);
+            const alertBox = document.getElementById('prod-batch-alert');
+
+            alertBox.classList.add('d-none');
+            if (!name || !email) {
+                alertBox.textContent = 'Indica el nombre y correo del perito o cliente.';
+                alertBox.classList.remove('d-none');
+                return;
+            }
+
+            try {
+                alertBox.className = "alert alert-info py-2 small";
+                alertBox.textContent = "Firmando criptográficamente y empaquetando licencia(s)...";
+                alertBox.classList.remove('d-none');
+
+                const res = await fetch('/api/admin/batch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...getAuthHeader()
+                    },
+                    body: JSON.stringify({
+                        customer_name: name,
+                        customer_email: email,
+                        product_slug: currentSelectedProduct.slug,
+                        tier: tier,
+                        quantity: qty,
+                        seats_per_license: tier === 'laboratorio' ? 5 : 1,
+                        valid_days: days
+                    })
+                });
+
+                if (res.ok) {
+                    const blob = await res.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `licencia_${currentSelectedProduct.slug}_${tier}_${qty}.zip`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+
+                    alertBox.className = "alert alert-success py-2 small";
+                    alertBox.textContent = "¡Licencia(s) generadas y descargadas exitosamente!";
+                    loadAdminData();
+                    loadProductsData();
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    alertBox.className = "alert alert-danger py-2 small";
+                    alertBox.textContent = errData.message || 'Error generando licencia.';
+                }
+            } catch (err) {
+                alertBox.className = "alert alert-danger py-2 small";
+                alertBox.textContent = `Error: ${err.message}`;
+            }
+        }
+
+        // ==========================================
+        // GESTIÓN DE PRODUCTOS
+        // ==========================================
 
         async function submitCreateProduct() {
             const name = document.getElementById('new-prod-name').value.trim();
@@ -708,8 +1147,9 @@
                     document.getElementById('new-prod-name').value = '';
                     document.getElementById('new-prod-slug').value = '';
                     document.getElementById('new-prod-desc').value = '';
-                    alert('Producto registrado con éxito.');
-                    loadProductsData();
+                    alert('Producto registrado exitosamente.');
+                    await loadProductsData();
+                    selectProduct(slug);
                 } else {
                     alertBox.textContent = data.message || 'Error registrando producto.';
                     alertBox.classList.remove('d-none');
@@ -720,103 +1160,35 @@
             }
         }
 
-        async function loadAdminData() {
-            try {
-                const res = await fetch('/api/admin/overview', { headers: getAuthHeader() });
-                if (res.ok) {
-                    const data = await res.json();
-                    document.getElementById('kpi-total-licenses').textContent = data.total_licenses || 0;
-                    document.getElementById('kpi-total-seats').textContent = data.total_seats || 0;
-                    document.getElementById('kpi-revenue').textContent = `$${(data.revenue_cents || 0) / 100} USD`;
+        // ==========================================
+        // GESTIÓN DE REVOCACIONES
+        // ==========================================
 
-                    const tbody = document.getElementById('table-licenses-body');
-                    if (!data.licenses || data.licenses.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-4 text-muted">No hay licencias registradas</td></tr>`;
-                        return;
-                    }
-
-                    tbody.innerHTML = data.licenses.map(l => `
-                        <tr>
-                            <td class="font-monospace text-info">${l.id}</td>
-                            <td>${l.customer_name} <br><span class="text-muted small">${l.customer_email}</span></td>
-                            <td><span class="badge ${l.tier === 'laboratorio' ? 'bg-primary' : (l.tier === 'caso' ? 'bg-secondary' : 'bg-info text-dark')}">${l.tier.toUpperCase()}</span></td>
-                            <td>${l.seats_assigned} / ${l.seats}</td>
-                            <td>
-                                ${l.is_revoked ? '<span class="badge bg-danger">Revocada</span>' : '<span class="badge bg-success text-dark">Activa</span>'}
-                            </td>
-                            <td class="small text-muted">${new Date(l.issued_at).toLocaleDateString()}</td>
-                            <td class="small text-muted">${l.expires_at ? new Date(l.expires_at).toLocaleDateString() : 'Perpetua'}</td>
-                            <td>
-                                <a href="/api/portal/license/${l.id}/download" class="btn btn-outline-light btn-sm py-0 px-2">Descargar .lic</a>
-                            </td>
-                        </tr>
-                    `).join('');
-                }
-            } catch (err) {
-                console.error(err);
+        function quickRevokeLicense(id) {
+            const reason = prompt(`Indica el motivo de revocación para la licencia ${id}:`, 'Sustitución de equipo');
+            if (reason && reason.trim()) {
+                executeRevoke(id, reason.trim());
             }
         }
 
-        async function submitBatchGenerate() {
-            const name = document.getElementById('batch-name').value.trim();
-            const email = document.getElementById('batch-email').value.trim();
-            const product_slug = document.getElementById('batch-product').value;
-            const tier = document.getElementById('batch-tier').value;
-            const qty = parseInt(document.getElementById('batch-qty').value, 10);
-            const days = parseInt(document.getElementById('batch-days').value, 10);
-            const alertBox = document.getElementById('batch-alert');
-
-            alertBox.classList.add('d-none');
-            if (!name || !email) {
-                alertBox.textContent = 'Indique nombre y email.';
-                alertBox.classList.remove('d-none');
-                return;
-            }
-
-            try {
-                const res = await fetch('/api/admin/batch', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...getAuthHeader()
-                    },
-                    body: JSON.stringify({
-                        customer_name: name,
-                        customer_email: email,
-                        product_slug,
-                        tier,
-                        quantity: qty,
-                        seats_per_license: tier === 'laboratorio' ? 5 : 1,
-                        valid_days: days
-                    })
-                });
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `batch_${product_slug}_${tier}_${qty}.zip`;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                loadAdminData();
-            } catch (err) {
-                alertBox.textContent = `Error: ${err.message}`;
-                alertBox.classList.remove('d-none');
-            }
-        }
-
-        async function submitRevocation() {
-            const id = document.getElementById('revoke-id').value.trim();
-            const reason = document.getElementById('revoke-reason').value.trim();
-            const alertBox = document.getElementById('revoke-alert');
+        async function submitCrlRevocation() {
+            const id = document.getElementById('crl-revoke-id').value.trim();
+            const reason = document.getElementById('crl-revoke-reason').value.trim();
+            const alertBox = document.getElementById('crl-alert');
 
             alertBox.classList.add('d-none');
             if (!id || !reason) {
-                alertBox.textContent = 'Indique ID y motivo.';
+                alertBox.textContent = 'Indica el ID de la licencia y el motivo.';
                 alertBox.classList.remove('d-none');
                 return;
             }
 
+            await executeRevoke(id, reason);
+            document.getElementById('crl-revoke-id').value = '';
+            document.getElementById('crl-revoke-reason').value = '';
+        }
+
+        async function executeRevoke(id, reason) {
             try {
                 const res = await fetch('/api/admin/revoke', {
                     method: 'POST',
@@ -828,12 +1200,155 @@
                 });
                 const data = await res.json();
                 if (res.ok) {
-                    alert('Licencia revocada.');
-                    document.getElementById('revoke-id').value = '';
-                    document.getElementById('revoke-reason').value = '';
+                    alert('Licencia agregada a la lista negra (CRL) inmutable.');
                     loadAdminData();
                 } else {
-                    alertBox.textContent = data.message || 'Error al revocar.';
+                    alert(data.message || 'Error al revocar la licencia.');
+                }
+            } catch (err) {
+                alert(`Error: ${err.message}`);
+            }
+        }
+
+        // ==========================================
+        // GESTIÓN DE USUARIOS
+        // ==========================================
+
+        async function loadUsersData() {
+            try {
+                const res = await fetch('/api/admin/users', { headers: getAuthHeader() });
+                if (res.ok) {
+                    const data = await res.json();
+                    const users = data.users || [];
+                    document.getElementById('sb-kpi-users').textContent = users.length;
+
+                    const tbody = document.getElementById('table-users-body');
+                    if (users.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-3 text-muted">No hay usuarios registrados</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = users.map(u => `
+                        <tr>
+                            <td class="font-monospace text-info small">${u.id}</td>
+                            <td class="fw-bold text-white">${u.name}</td>
+                            <td>${u.email}</td>
+                            <td><span class="badge ${u.role === 'superadmin' ? 'bg-warning text-dark' : (u.role === 'admin' ? 'bg-info text-dark' : 'bg-secondary')}">${u.role.toUpperCase()}</span></td>
+                            <td>${u.is_active ? '<span class="badge bg-success text-dark">Activo</span>' : '<span class="badge bg-danger">Inactivo</span>'}</td>
+                            <td class="small text-muted">${u.last_login_at ? new Date(u.last_login_at).toLocaleString() : 'Nunca'}</td>
+                            <td class="small text-muted">${new Date(u.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button class="btn btn-outline-danger btn-sm py-0 px-2" onclick="deleteUser('${u.id}', '${u.email}')" ${u.role === 'superadmin' ? 'disabled' : ''} title="Eliminar usuario">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error("Error cargando usuarios:", err);
+            }
+        }
+
+        async function submitCreateUser() {
+            const name = document.getElementById('user-new-name').value.trim();
+            const email = document.getElementById('user-new-email').value.trim();
+            const password = document.getElementById('user-new-pwd').value;
+            const role = document.getElementById('user-new-role').value;
+            const alertBox = document.getElementById('new-user-alert');
+
+            alertBox.classList.add('d-none');
+            if (!name || !email || !password) {
+                alertBox.textContent = 'Todos los campos son obligatorios.';
+                alertBox.classList.remove('d-none');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/admin/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+                    body: JSON.stringify({ name, email, password, role })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById('modal-new-user'))?.hide();
+                    document.getElementById('user-new-name').value = '';
+                    document.getElementById('user-new-email').value = '';
+                    document.getElementById('user-new-pwd').value = '';
+                    alert('Usuario registrado exitosamente.');
+                    loadUsersData();
+                } else {
+                    alertBox.textContent = data.message || 'Error creando usuario.';
+                    alertBox.classList.remove('d-none');
+                }
+            } catch (err) {
+                alertBox.textContent = `Error: ${err.message}`;
+                alertBox.classList.remove('d-none');
+            }
+        }
+
+        async function deleteUser(id, email) {
+            if (!confirm(`¿Estás seguro de eliminar el acceso para ${email}?`)) return;
+            try {
+                const res = await fetch(`/api/admin/users/${id}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeader()
+                });
+                if (res.ok) {
+                    alert('Usuario eliminado.');
+                    loadUsersData();
+                } else {
+                    const data = await res.json().catch(() => ({}));
+                    alert(data.message || 'Error eliminando usuario.');
+                }
+            } catch (err) {
+                alert(`Error: ${err.message}`);
+            }
+        }
+
+        // ==========================================
+        // CAMBIO DE CONTRASEÑA
+        // ==========================================
+
+        async function submitChangePassword() {
+            const cur = document.getElementById('pwd-current').value;
+            const np = document.getElementById('pwd-new').value;
+            const cnp = document.getElementById('pwd-confirm').value;
+            const alertBox = document.getElementById('pwd-alert');
+
+            alertBox.classList.add('d-none');
+            if (!cur || !np || !cnp) {
+                alertBox.textContent = 'Todos los campos son obligatorios.';
+                alertBox.classList.remove('d-none');
+                return;
+            }
+            if (np !== cnp) {
+                alertBox.textContent = 'La nueva contraseña y su confirmación no coinciden.';
+                alertBox.classList.remove('d-none');
+                return;
+            }
+            if (np.length < 8) {
+                alertBox.textContent = 'La nueva contraseña debe tener al menos 8 caracteres.';
+                alertBox.classList.remove('d-none');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/admin/auth/change-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+                    body: JSON.stringify({ current_password: cur, new_password: np })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById('modal-change-password'))?.hide();
+                    document.getElementById('pwd-current').value = '';
+                    document.getElementById('pwd-new').value = '';
+                    document.getElementById('pwd-confirm').value = '';
+                    alert('Contraseña actualizada con éxito.');
+                } else {
+                    alertBox.textContent = data.message || 'Error actualizando contraseña.';
                     alertBox.classList.remove('d-none');
                 }
             } catch (err) {
@@ -843,8 +1358,14 @@
         }
 
         function loadDashboardData() {
+            loadProductsData().then(() => {
+                // Seleccionar ChatProof Pro por defecto al cargar si existe
+                const defaultProd = globalProducts.find(p => p.slug.includes('chatproof')) || globalProducts[0];
+                if (defaultProd) {
+                    selectProduct(defaultProd.slug);
+                }
+            });
             loadAdminData();
-            loadProductsData();
             loadUsersData();
         }
 
