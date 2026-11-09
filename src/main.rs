@@ -102,6 +102,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/api/admin/revoke", post(handlers::admin::revoke_license))
         .route("/api/crl/active", get(handlers::admin::get_active_crl))
 
+        // --- CATÁLOGO MULTI-PRODUCTO (CAUSER ENGINE) ---
+        .route("/api/public/products", get(handlers::products::public_list_products))
+        .route("/api/admin/products", get(handlers::products::admin_list_products).post(handlers::products::admin_create_product))
+        .route("/api/admin/products/:id", axum::routing::put(handlers::products::admin_update_product))
+
         .layer(cors)
         .layer(TraceLayer::new_for_http())
         .with_state(state);

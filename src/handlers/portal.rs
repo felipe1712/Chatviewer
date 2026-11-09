@@ -30,7 +30,7 @@ pub async fn list_portal_licenses(
 
     let licenses: Vec<LicenseRecord> = match sqlx::query_as::<_, LicenseRecord>(
         r#"
-        SELECT l.id, l.order_id, l.customer_id, l.tier, l.seats, l.issued_at, l.expires_at, l.signature, l.is_revoked, l.revocation_reason, l.created_at
+        SELECT l.id, l.order_id, l.customer_id, l.product_id, l.tier, l.seats, l.issued_at, l.expires_at, l.signature, l.is_revoked, l.revocation_reason, l.created_at
         FROM licenses l
         LEFT JOIN customers c ON l.customer_id = c.id
         LEFT JOIN orders o ON l.order_id = o.id
@@ -64,8 +64,23 @@ pub async fn list_portal_licenses(
 
         let days_remaining = lic.expires_at.map(|exp| (exp - now).num_days());
 
+        let product_info = if let Some(ref pid) = lic.product_id {
+            sqlx::query("SELECT slug, name FROM products WHERE id = ?1")
+                .bind(pid)
+                .fetch_optional(&state.db)
+                .await
+                .ok()
+                .flatten()
+                .map(|r| (r.get::<String, _>("slug"), r.get::<String, _>("name")))
+                .unwrap_or_else(|| ("chatproof-pro".to_string(), "ChatProof Pro".to_string()))
+        } else {
+            ("chatproof-pro".to_string(), "ChatProof Pro".to_string())
+        };
+
         result.push(json!({
             "id": lic.id,
+            "product_slug": product_info.0,
+            "product_name": product_info.1,
             "tier": lic.tier,
             "seats": lic.seats,
             "issued_at": lic.issued_at,
@@ -85,7 +100,7 @@ pub async fn assign_seat(
     Json(payload): Json<AssignSeatRequest>,
 ) -> Response {
     let lic = match sqlx::query_as::<_, LicenseRecord>(
-        "SELECT id, order_id, customer_id, tier, seats, issued_at, expires_at, signature, is_revoked, revocation_reason, created_at FROM licenses WHERE id = ?1",
+        "SELECT id, order_id, customer_id, product_id, tier, seats, issued_at, expires_at, signature, is_revoked, revocation_reason, created_at FROM licenses WHERE id = ?1",
     )
     .bind(&license_id)
     .fetch_optional(&state.db)
@@ -199,7 +214,7 @@ pub async fn download_license(
     Path(license_id): Path<String>,
 ) -> Response {
     let lic = match sqlx::query_as::<_, LicenseRecord>(
-        "SELECT id, order_id, customer_id, tier, seats, issued_at, expires_at, signature, is_revoked, revocation_reason, created_at FROM licenses WHERE id = ?1",
+        "SELECT id, order_id, customer_id, product_id, tier, seats, issued_at, expires_at, signature, is_revoked, revocation_reason, created_at FROM licenses WHERE id = ?1",
     )
     .bind(&license_id)
     .fetch_optional(&state.db)
