@@ -3,35 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Autogestión de Licencias · ChatProof Pro</title>
+    <title>Portal de Autogestión de Licencias · ChatProof</title>
+    
+    <!-- TIPOGRAFÍA OFICIAL NUEVA IMAGEN: Archivo, Inter, IBM Plex Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <style>
         :root {
-            --bs-body-bg: #0b0f19;
-            --bs-body-color: #cbd5e1;
-            --forensic-accent: #38bdf8;
-            --forensic-border: #1e293b;
+            /* PALETA OFICIAL CHATPROOF (NUEVA IMAGEN) */
+            --cp-bg: #0F1720;
+            --cp-surface: #17212C;
+            --cp-surface-elevated: #1E2A38;
+            --cp-border: #222C37;
+            --cp-border-subtle: #2B3540;
+            --cp-border-bright: #3A4552;
+            --cp-accent: #0E7C66;
+            --cp-accent-hover: #129B80;
+            --cp-accent-mint: #4CC3A0;
+            --cp-text-primary: #F5F4EF;
+            --cp-text-secondary: #C5CAD0;
+            --cp-text-muted: #8B939C;
+            --cp-warning: #E9A23B;
+
+            --bs-body-bg: var(--cp-bg);
+            --bs-body-color: var(--cp-text-secondary);
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--cp-bg);
+            color: var(--cp-text-secondary);
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Archivo', sans-serif;
+            color: var(--cp-text-primary);
+            letter-spacing: -0.025em;
+        }
+
+        .font-mono {
+            font-family: 'IBM Plex Mono', monospace !important;
+        }
+
         .card-custom {
-            background-color: #111827;
-            border: 1px solid var(--forensic-border);
-            border-radius: 0.75rem;
+            background-color: var(--cp-surface);
+            border: 1px solid var(--cp-border-subtle);
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-cp-primary {
+            background: var(--cp-accent);
+            color: #FFFFFF !important;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            padding: 8px 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+        .btn-cp-primary:hover {
+            background: var(--cp-accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-cp-outline {
+            background: transparent;
+            color: var(--cp-text-primary) !important;
+            border: 1px solid var(--cp-border-bright);
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 8px 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+        .btn-cp-outline:hover {
+            background: var(--cp-surface-elevated);
+            border-color: var(--cp-accent-mint);
+            color: #FFFFFF !important;
+        }
+
+        .cp-input {
+            background-color: var(--cp-bg) !important;
+            border: 1px solid var(--cp-border-bright) !important;
+            color: var(--cp-text-primary) !important;
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+        .cp-input:focus {
+            border-color: var(--cp-accent-mint) !important;
+            box-shadow: 0 0 0 2px rgba(76, 195, 160, 0.25) !important;
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-dark border-bottom" style="background: rgba(11, 15, 25, 0.95); border-color: var(--forensic-border) !important;">
+    <!-- NAVBAR -->
+    <nav class="navbar border-bottom sticky-top py-3" style="background: rgba(15, 23, 32, 0.96); backdrop-filter: blur(12px); border-color: var(--cp-border) !important;">
         <div class="container">
-            <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="/">
-                <i class="bi bi-shield-check text-info fs-4"></i>
-                <span>ChatProof <span class="badge bg-info text-dark ms-1">PRO</span> · Portal</span>
+            <a class="navbar-brand text-decoration-none d-flex align-items-center gap-2" href="/">
+                <svg width="32" height="32" viewBox="0 0 64 64" aria-hidden="true">
+                    <path d="M14 6h36a10 10 0 0 1 10 10v24a10 10 0 0 1-10 10H27l-12 9v-9h-1A10 10 0 0 1 4 40V16A10 10 0 0 1 14 6z" fill="#F5F4EF"/>
+                    <path d="M19.5 28.5l8 8 17-17" fill="none" stroke="#0E7C66" stroke-width="6" stroke-linecap="square"/>
+                </svg>
+                <span style="font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.03em; color: #F5F4EF">
+                    Chat<span style="color: #4CC3A0">Proof</span>
+                </span>
+                <span class="badge ms-2" style="background: rgba(14, 124, 102, 0.25); color: #4CC3A0; border: 1px solid rgba(76, 195, 160, 0.3); font-size: 0.72rem; letter-spacing: 0.05em; font-family: 'IBM Plex Mono';">PORTAL</span>
             </a>
-            <div class="d-flex align-items-center gap-2">
-                <span class="badge bg-success" id="user-badge">Cliente Autenticado</span>
-                <a href="/" class="btn btn-outline-secondary btn-sm"><i class="bi bi-box-arrow-right"></i> Salir</a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge" style="background: rgba(76, 195, 160, 0.15); color: #4CC3A0; border: 1px solid rgba(76, 195, 160, 0.3); font-family: 'IBM Plex Mono';" id="user-badge">Cliente Autenticado</span>
+                <a href="/" class="btn-cp-outline py-1 px-3" style="font-size: 0.85rem;"><i class="bi bi-box-arrow-right"></i> Salir</a>
             </div>
         </div>
     </nav>
@@ -40,11 +135,12 @@
         <!-- ENCABEZADO -->
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
+                <p class="font-mono text-uppercase mb-1" style="font-size: 13px; color: #4CC3A0; letter-spacing: 0.08em;">AUTOGESTIÓN PERICIAL</p>
                 <h3 class="fw-bold text-white mb-1">Tus Licencias Forenses</h3>
                 <p class="text-secondary small mb-0">Asigna la huella de hardware de tus estaciones de peritaje y descarga tu archivo criptográfico <code>license.lic</code>.</p>
             </div>
             <div>
-                <button class="btn btn-info btn-sm fw-bold text-dark" onclick="reloadLicenses()">
+                <button class="btn-cp-outline" onclick="reloadLicenses()">
                     <i class="bi bi-arrow-clockwise me-1"></i> Actualizar
                 </button>
             </div>
@@ -53,7 +149,7 @@
         <!-- LISTA DE LICENCIAS -->
         <div id="licenses-container">
             <div class="text-center py-5">
-                <div class="spinner-border text-info" role="status"></div>
+                <div class="spinner-border" style="color: #4CC3A0;" role="status"></div>
                 <div class="text-muted small mt-2">Cargando tus licencias activas...</div>
             </div>
         </div>
@@ -62,34 +158,34 @@
     <!-- MODAL VINCULAR ESTACIÓN -->
     <div class="modal fade" id="modal-assign" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark border" style="border-color: var(--forensic-border) !important;">
-                <div class="modal-header border-bottom" style="border-color: var(--forensic-border) !important;">
+            <div class="modal-content" style="background-color: var(--cp-surface); color: var(--cp-text-primary); border: 1px solid var(--cp-border-bright); border-radius: 16px;">
+                <div class="modal-header border-bottom" style="border-color: var(--cp-border-bright) !important;">
                     <h5 class="modal-title text-white fw-bold">
-                        <i class="bi bi-cpu-fill text-info me-2"></i> Vincular Estación Forense
+                        <i class="bi bi-cpu-fill me-2" style="color: #4CC3A0;"></i> Vincular Estación Forense
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
                     <p class="text-secondary small mb-3">
-                        Abre <strong>ChatProof Pro</strong> en tu estación de trabajo, pulsa en el botón de <strong>Licencia</strong> en la barra superior y copia la <strong>Huella de Máquina</strong>.
+                        Abre <strong>ChatProof</strong> en tu estación de trabajo, pulsa en el botón de <strong>Licencia</strong> en la barra superior y copia la <strong>Huella de Máquina</strong>.
                     </p>
                     <input type="hidden" id="assign-license-id">
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">Huella de Máquina (Machine Fingerprint) *</label>
-                        <input type="text" class="form-control font-monospace small" id="assign-fingerprint" placeholder="Ej. A1B2C3D4E5F67890..." required>
+                        <label class="form-label small fw-bold text-muted mb-1">Huella de Máquina (Machine Fingerprint) *</label>
+                        <input type="text" class="form-control cp-input font-mono small" id="assign-fingerprint" placeholder="Ej. A1B2C3D4E5F67890..." required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">Identificador de Dongle USB (Opcional si usa llave física)</label>
-                        <input type="text" class="form-control font-monospace small" id="assign-dongle" placeholder="Ej. USB:VID_0781&PID_5583&SER_12345">
+                        <label class="form-label small fw-bold text-muted mb-1">Identificador de Dongle USB (Opcional si usa llave física)</label>
+                        <input type="text" class="form-control cp-input font-mono small" id="assign-dongle" placeholder="Ej. USB:VID_0781&PID_5583&SER_12345">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">Etiqueta Descriptiva de la Máquina</label>
-                        <input type="text" class="form-control" id="assign-label" placeholder="Ej. Laptop Dell Forense Perito 1">
+                        <label class="form-label small fw-bold text-muted mb-1">Etiqueta Descriptiva de la Máquina</label>
+                        <input type="text" class="form-control cp-input" id="assign-label" placeholder="Ej. Laptop Dell Forense Perito 1">
                     </div>
 
                     <div id="assign-alert" class="alert alert-danger py-2 small d-none"></div>
 
-                    <button class="btn btn-info w-100 py-2 fw-bold text-dark" id="btn-submit-assign" onclick="submitSeatAssignment()">
+                    <button class="btn-cp-primary w-100 py-2 mt-2" id="btn-submit-assign" onclick="submitSeatAssignment()">
                         Vincular y Generar Licencia Firmada
                     </button>
                 </div>
@@ -107,7 +203,7 @@
             const container = document.getElementById('licenses-container');
             container.innerHTML = `
                 <div class="text-center py-5">
-                    <div class="spinner-border text-info" role="status"></div>
+                    <div class="spinner-border" style="color: #4CC3A0;" role="status"></div>
                     <div class="text-muted small mt-2">Cargando licencias...</div>
                 </div>
             `;
@@ -119,10 +215,10 @@
                 if (!res.ok || !data.licenses || data.licenses.length === 0) {
                     container.innerHTML = `
                         <div class="card card-custom p-5 text-center">
-                            <i class="bi bi-shield-slash text-secondary fs-1 mb-3"></i>
+                            <i class="bi bi-shield-slash fs-1 mb-3" style="color: #8B939C;"></i>
                             <h5 class="text-white fw-bold">No se encontraron licencias activas</h5>
                             <p class="text-secondary small mb-3">Si acabas de realizar una compra, el pago puede demorar unos segundos en conciliarse.</p>
-                            <div><a href="/#pricing" class="btn btn-outline-info btn-sm">Ver Planes y Precios</a></div>
+                            <div><a href="/#pricing" class="btn-cp-primary">Ver Planes y Precios</a></div>
                         </div>
                     `;
                     return;
@@ -136,49 +232,49 @@
 
                     return `
                         <div class="card card-custom p-4 mb-4">
-                            <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3 flex-wrap gap-2">
+                            <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3 flex-wrap gap-2" style="border-color: var(--cp-border-bright) !important;">
                                 <div>
-                                    <span class="badge ${tierName === 'LABORATORIO' ? 'bg-primary' : 'bg-info text-dark'} fw-bold me-2">
+                                    <span class="badge fw-bold me-2" style="background: rgba(14, 124, 102, 0.25); color: #4CC3A0; border: 1px solid rgba(76, 195, 160, 0.3); font-family: 'IBM Plex Mono';">
                                         NIVEL ${tierName}
                                     </span>
-                                    <span class="text-white fw-bold">ID: ${lic.id}</span>
+                                    <span class="text-white fw-bold font-mono">ID: ${lic.id}</span>
                                     <div class="text-secondary small mt-1">
                                         Vigencia: <strong>${lic.expires_at ? new Date(lic.expires_at).toLocaleDateString() : 'Perpetua'}</strong>
                                         (${lic.days_remaining !== null ? lic.days_remaining + ' días restantes' : 'Ilimitada'})
                                     </div>
                                 </div>
                                 <div>
-                                    <button class="btn btn-success btn-sm fw-bold" onclick="downloadLicFile('${lic.id}')">
+                                    <button class="btn-cp-primary" onclick="downloadLicFile('${lic.id}')">
                                         <i class="bi bi-download me-1"></i> Descargar license.lic
                                     </button>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
+                            <div class="mb-2">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <span class="small fw-bold text-muted">Estaciones Asignadas (${assignedCount} de ${maxSeats})</span>
                                     ${canAdd ? `
-                                        <button class="btn btn-outline-info btn-sm" onclick="openAssignModal('${lic.id}')">
+                                        <button class="btn-cp-outline py-1 px-2" style="font-size: 0.8rem;" onclick="openAssignModal('${lic.id}')">
                                             <i class="bi bi-plus-circle me-1"></i> Vincular Estación
                                         </button>
                                     ` : `
-                                        <span class="badge bg-secondary">Cupo de Asientos Completo</span>
+                                        <span class="badge" style="background: #1E2A38; color: #8B939C;">Cupo de Asientos Completo</span>
                                     `}
                                 </div>
 
-                                <div class="list-group list-group-flush border rounded overflow-hidden">
+                                <div class="list-group list-group-flush rounded overflow-hidden" style="border: 1px solid var(--cp-border-bright);">
                                     ${assignedCount === 0 ? `
-                                        <div class="list-group-item bg-dark text-muted small py-3 text-center">
+                                        <div class="list-group-item text-muted small py-3 text-center" style="background-color: #111A24;">
                                             No has vinculado ninguna huella de estación todavía. Haz clic en <strong>Vincular Estación</strong> para registrar tu primera PC.
                                         </div>
                                     ` : (lic.seats_assigned || []).map(seat => `
-                                        <div class="list-group-item bg-dark d-flex justify-content-between align-items-center py-2">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center py-2" style="background-color: #111A24; border-color: var(--cp-border-subtle);">
                                             <div>
-                                                <i class="bi bi-laptop text-info me-2"></i>
+                                                <i class="bi bi-laptop me-2" style="color: #4CC3A0;"></i>
                                                 <strong class="text-white">${seat.label || 'Estación Forense'}</strong>
-                                                <div class="font-monospace text-muted small" style="font-size: 0.75rem;">${seat.machine_fingerprint}</div>
+                                                <div class="font-mono text-muted small" style="font-size: 0.75rem;">${seat.machine_fingerprint}</div>
                                             </div>
-                                            <span class="badge bg-success text-dark">Activo</span>
+                                            <span class="badge" style="background: rgba(14, 124, 102, 0.25); color: #4CC3A0; border: 1px solid rgba(76, 195, 160, 0.3);">Activo</span>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -214,7 +310,7 @@
 
             alertBox.classList.add('d-none');
             if (!fp) {
-                alertBox.textContent = 'Por favor introduzca la huella de máquina obtenida de ChatProof Pro.';
+                alertBox.textContent = 'Por favor introduzca la huella de máquina obtenida de ChatProof.';
                 alertBox.classList.remove('d-none');
                 return;
             }
