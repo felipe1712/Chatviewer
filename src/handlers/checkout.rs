@@ -27,6 +27,7 @@ pub async fn create_checkout(
 
     let is_monthly = req.billing_cycle.as_deref().map(|c| c == "monthly").unwrap_or(false);
     let (default_amount_cents, tier_enum, default_seats) = match (req.tier.to_lowercase().as_str(), is_monthly) {
+        ("caso", _) => (8900, LicenseTier::Caso, 1),
         ("laboratorio", true) => (59900, LicenseTier::Laboratorio, 5),
         ("laboratorio", false) => (189900, LicenseTier::Laboratorio, 5),
         (_, true) => (24900, LicenseTier::Peritaje, 1),

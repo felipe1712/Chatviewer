@@ -65,6 +65,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/portal", get(handlers::landing::serve_portal))
         .route("/admin", get(handlers::landing::serve_admin))
         .route("/download/evaluation", get(handlers::landing::download_free_evaluation))
+        .route("/download/sample-package", get(handlers::landing::download_sample_package))
         .route("/robots.txt", get(handlers::landing::serve_robots))
         .route("/sitemap.xml", get(handlers::landing::serve_sitemap))
 

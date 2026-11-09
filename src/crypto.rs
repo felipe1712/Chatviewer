@@ -10,6 +10,8 @@ type HmacSha256 = Hmac<Sha256>;
 pub enum LicenseTier {
     #[serde(rename = "free", alias = "trial")]
     Free,
+    #[serde(rename = "caso", alias = "per_case", alias = "single_case")]
+    Caso,
     #[serde(rename = "peritaje", alias = "professional")]
     Peritaje,
     #[serde(rename = "laboratorio", alias = "enterprise", alias = "team")]
@@ -20,6 +22,7 @@ impl LicenseTier {
     pub fn as_str(&self) -> &'static str {
         match self {
             LicenseTier::Free => "free",
+            LicenseTier::Caso => "caso",
             LicenseTier::Peritaje => "peritaje",
             LicenseTier::Laboratorio => "laboratorio",
         }
@@ -28,6 +31,7 @@ impl LicenseTier {
     pub fn default_seats(&self) -> u32 {
         match self {
             LicenseTier::Free => 1,
+            LicenseTier::Caso => 1,
             LicenseTier::Peritaje => 1,
             LicenseTier::Laboratorio => 5,
         }
@@ -40,14 +44,28 @@ impl LicenseTier {
                 "whatsapp_ios".to_string(),
                 "sms_mms".to_string(),
                 "telegram".to_string(),
+                "ufed_oxygen_import".to_string(),
                 "rsmf_inspect".to_string(),
                 "export_5_percent".to_string(),
+            ],
+            LicenseTier::Caso => vec![
+                "whatsapp_android".to_string(),
+                "whatsapp_ios".to_string(),
+                "sms_mms".to_string(),
+                "telegram".to_string(),
+                "ufed_oxygen_import".to_string(),
+                "pdf_export".to_string(),
+                "rsmf_inspect".to_string(),
+                "dual_hash_audit".to_string(),
+                "single_case_export".to_string(),
             ],
             LicenseTier::Peritaje => vec![
                 "whatsapp_android".to_string(),
                 "whatsapp_ios".to_string(),
                 "sms_mms".to_string(),
                 "telegram".to_string(),
+                "ufed_oxygen_import".to_string(),
+                "pdf_export".to_string(),
                 "rsmf_inspect".to_string(),
                 "rsmf_repair".to_string(),
                 "dual_hash_audit".to_string(),
@@ -58,6 +76,8 @@ impl LicenseTier {
                 "whatsapp_ios".to_string(),
                 "sms_mms".to_string(),
                 "telegram".to_string(),
+                "ufed_oxygen_import".to_string(),
+                "pdf_export".to_string(),
                 "rsmf_inspect".to_string(),
                 "rsmf_repair".to_string(),
                 "dual_hash_audit".to_string(),
