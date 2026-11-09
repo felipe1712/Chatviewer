@@ -15,7 +15,9 @@ const LANDING_HTML: &str = include_str!("../../templates/landing.html");
 const PORTAL_HTML: &str = include_str!("../../templates/portal.html");
 const ADMIN_HTML: &str = include_str!("../../templates/admin.html");
 
-const ROBOTS_TXT: &str = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\n";
+const ROBOTS_TXT: &str = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\n\nSitemap: https://admin.causer.com.mx/sitemap.xml\n";
+
+const SITEMAP_XML: &str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>https://admin.causer.com.mx/</loc>\n    <lastmod>2026-11-09</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>\n  <url>\n    <loc>https://admin.causer.com.mx/portal</loc>\n    <lastmod>2026-11-09</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n</urlset>\n";
 
 pub async fn serve_hub() -> Html<&'static str> {
     Html(HUB_HTML)
